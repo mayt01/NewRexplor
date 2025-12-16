@@ -1,0 +1,22 @@
+﻿@model Rexplor.Models.ContactUsMessage
+
+<h2>Contact Us</h2>
+
+<form method="post" action="@Url.Action("Create", "ContactUs")">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Message" class="form-label">Message</label>
+        <textarea class="form-control" id="Message" name="Message" rows="4" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Message</button>
+</form>

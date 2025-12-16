@@ -1,0 +1,147 @@
+﻿@* @model IEnumerable<Consultation>
+@using Rexplor.Controllers
+@using Rexplor.Models
+
+@{
+    ViewData["Title"] = "مشاوره‌های من";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">
+                <i class="bi bi-chat-left-text text-primary"></i>
+                @ViewData["Title"]
+            </h1>
+        </div>
+        <div class="col-md-4 text-left">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> رزرو مشاوره جدید
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-check display-1 text-muted"></i>
+            <h4 class="mt-3">هنوز مشاوره‌ای رزرو نکرده‌اید</h4>
+            <p class="text-muted mb-4">برای دریافت مشاوره تخصصی، اولین جلسه را رزرو کنید.</p>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> رزرو اولین مشاوره
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var consultation in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm border-start border-4 @GetStatusBorderClass(consultation.Status)">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge @GetStatusBadgeClass(consultation.Status)">
+                                    @consultation.Status.GetDisplayName()
+                                </span>
+                                <span class="badge bg-primary">
+                                    @consultation.Type.GetDisplayName()
+                                </span>
+                            </div>
+
+                            <h5 class="card-title">@consultation.Topic</h5>
+                            <p class="card-text text-muted small">
+                                @consultation.Description.Substring(0, Math.Min(100, consultation.Description.Length))...
+                            </p>
+
+                            <div class="row text-center small mt-3">
+                                <div class="col-6">
+                                    <i class="bi bi-calendar"></i><br>
+                                    @consultation.SessionDate.ToString("yyyy/MM/dd")
+                                </div>
+                                <div class="col-6">
+                                    <i class="bi bi-clock"></i><br>
+                                    @consultation.SessionTime.ToString(@"hh\:mm")
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <span class="badge bg-light text-dark">
+                                    <i class="bi bi-credit-card"></i>
+                                    @consultation.Price.ToString("N0") تومان
+                                </span>
+                                <span class="badge @(consultation.IsPaid ? "bg-success" : "bg-warning")">
+                                    @(consultation.IsPaid ? "پرداخت شده" : "در انتظار پرداخت")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-transparent">
+                            <div class="btn-group w-100" role="group">
+                                <a asp-action="Details" asp-route-id="@consultation.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye"></i> جزئیات
+                                </a>
+
+                                @if (consultation.Status == ConsultationStatus.Pending)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@consultation.Id"
+                                       class="btn btn-outline-warning btn-sm">
+                                        <i class="bi bi-pencil"></i> ویرایش
+                                    </a>
+
+                                    <form asp-action="Cancel" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@consultation.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                onclick="return confirm('آیا از لغو این مشاوره مطمئن هستید؟')">
+                                            <i class="bi bi-x-circle"></i> لغو
+                                        </button>
+                                    </form>
+                                }
+
+                                @if (consultation.Status == ConsultationStatus.Approved && !consultation.IsPaid)
+                                {
+                                    <a asp-action="Payment" asp-route-id="@consultation.Id"
+                                       class="btn btn-success btn-sm">
+                                        <i class="bi bi-credit-card"></i> پرداخت
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(ConsultationStatus status)
+    {
+        return status switch
+        {
+            ConsultationStatus.Pending => "bg-warning",
+            ConsultationStatus.Approved => "bg-success",
+            ConsultationStatus.Rejected => "bg-danger",
+            ConsultationStatus.Cancelled => "bg-secondary",
+            ConsultationStatus.Completed => "bg-info",
+            ConsultationStatus.InProgress => "bg-primary",
+            _ => "bg-secondary"
+        };
+    }
+
+    string GetStatusBorderClass(ConsultationStatus status)
+    {
+        return status switch
+        {
+            ConsultationStatus.Pending => "border-warning",
+            ConsultationStatus.Approved => "border-success",
+            ConsultationStatus.Rejected => "border-danger",
+            ConsultationStatus.Cancelled => "border-secondary",
+            ConsultationStatus.Completed => "border-info",
+            ConsultationStatus.InProgress => "border-primary",
+            _ => "border-secondary"
+        };
+    }
+} *@

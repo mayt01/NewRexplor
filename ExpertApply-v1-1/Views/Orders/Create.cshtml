@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "سفارش فایل";
+}
+
+<h2>سفارش فایل اکسل</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>نام فایل</label>
+        <input type="text" name="fileName" class="form-control" required />
+    </div>
+    <div class="form-group mt-2">
+        <label>قیمت</label>
+        <input type="number" name="price" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">ثبت سفارش</button>
+</form>

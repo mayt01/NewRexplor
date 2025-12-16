@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Rexplor.Models.Order>
+@using Rexplor.Extensions
+@using Rexplor.Models
+
+@{
+    ViewData["Title"] = "سفارش‌های من";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">
+                <i class="bi bi-receipt text-primary"></i>
+                @ViewData["Title"]
+            </h1>
+        </div>
+        <div class="col-md-4 text-left">
+            <a asp-controller="Cart" asp-action="Index" class="btn btn-success">
+                <i class="bi bi-cart"></i> سبد خرید
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-receipt display-1 text-muted"></i>
+            <h4 class="mt-3">هنوز سفارشی ثبت نکرده‌اید</h4>
+            <p class="text-muted mb-4">می‌توانید با مراجعه به فروشگاه، فایل‌های مورد نظر خود را خریداری کنید.</p>
+            <a asp-controller="DataFiles" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-shop"></i> مشاهده فروشگاه
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>شماره سفارش</th>
+                        <th>تاریخ</th>
+                        <th>تعداد فایل‌ها</th>
+                        <th>مبلغ کل</th>
+                        <th>وضعیت پرداخت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@order.OrderNumber</strong>
+                            </td>
+                            <td>@order.OrderDate.ToString("yyyy/MM/dd HH:mm")</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    @order.OrderItems.Count فایل
+                                </span>
+                            </td>
+                            <td class="text-success">
+                                <strong>@order.TotalAmount.ToString("N0") تومان</strong>
+                            </td>
+                            <td>
+                                <span class="badge @GetStatusBadgeClass(order.PaymentStatus)">
+                                    @order.PaymentStatus.GetDisplayName()
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-action="OrderDetails" asp-route-id="@order.Id"
+                                       class="btn btn-outline-primary">
+                                        <i class="bi bi-eye"></i> جزئیات
+                                    </a>
+
+                                    @if (order.PaymentStatus == PaymentStatus.Pending)
+                                    {
+                                        <a asp-action="Payment" asp-route-id="@order.Id"
+                                           class="btn btn-success">
+                                            <i class="bi bi-credit-card"></i> پرداخت
+                                        </a>
+                                    }
+
+                                    @if (order.PaymentStatus == PaymentStatus.Paid)
+                                    {
+                                        <a asp-action="DownloadableFiles" asp-route-id="@order.Id"
+                                           class="btn btn-primary">
+                                            <i class="bi bi-download"></i> دانلود
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@functions {
+    string GetStatusBadgeClass(PaymentStatus status)
+    {
+        return status switch
+        {
+            PaymentStatus.Paid => "bg-success",
+            PaymentStatus.Pending => "bg-warning",
+            PaymentStatus.Failed => "bg-danger",
+            PaymentStatus.Cancelled => "bg-secondary",
+            PaymentStatus.Refunded => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}

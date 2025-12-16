@@ -1,0 +1,213 @@
+﻿@using Rexplor.Controllers
+@model UserDashboardViewModel
+@{
+    ViewData["Title"] = "داشبورد کاربری";
+}
+
+<div class="container py-4">
+    <!-- هدر -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">
+                <i class="bi bi-speedometer2 text-primary"></i>
+                @ViewData["Title"]
+            </h1>
+            <p class="text-muted">خوش آمدید، @User.Identity?.Name</p>
+        </div>
+        <div class="col-md-4 text-left">
+            <div class="btn-group">
+                <a asp-controller="DataFiles" asp-action="Index" 
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-shop"></i> فروشگاه
+                </a>
+                <a asp-action="Profile" class="btn btn-outline-secondary">
+                    <i class="bi bi-person"></i> پروفایل
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- آمار کلی -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-primary shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-receipt display-4 text-primary"></i>
+                    <h3 class="mt-2">@Model.TotalOrders</h3>
+                    <p class="card-text">کل سفارش‌ها</p>
+                    <a asp-controller="Orders" asp-action="MyOrders" 
+                       class="btn btn-sm btn-outline-primary">مشاهده همه</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-success shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle display-4 text-success"></i>
+                    <h3 class="mt-2">@Model.PaidOrders</h3>
+                    <p class="card-text">سفارش‌های پرداخت شده</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-warning shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock display-4 text-warning"></i>
+                    <h3 class="mt-2">@Model.PendingOrders</h3>
+                    <p class="card-text">در انتظار پرداخت</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-info shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-currency-dollar display-4 text-info"></i>
+                    <h3 class="mt-2">@Model.TotalSpent.ToString("N0")</h3>
+                    <p class="card-text">کل خریدها (تومان)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ردیف دوم: اطلاعات -->
+    <div class="row">
+        <!-- آخرین سفارش‌ها -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> آخرین سفارش‌ها
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentOrders.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var order in Model.RecentOrders)
+                            {
+                                <a asp-controller="Orders" asp-action="OrderDetails" 
+                                   asp-route-id="@order.Id"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">@order.OrderNumber</h6>
+                                        <small>@order.OrderDate.ToString("MM/dd")</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <span class="badge @(order.IsPaid ? "bg-success" : "bg-warning")">
+                                            @(order.IsPaid ? "پرداخت شده" : "در انتظار")
+                                        </span>
+                                        <span class="text-muted ms-2">
+                                            @order.OrderItems.Count فایل
+                                        </span>
+                                    </p>
+                                    <small class="text-success">
+                                        @order.TotalAmount.ToString("N0") تومان
+                                    </small>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">هنوز سفارشی ثبت نکرده‌اید.</p>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Orders" asp-action="MyOrders" 
+                       class="btn btn-sm btn-outline-primary w-100">
+                        مشاهده همه سفارش‌ها
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- فایل‌های خریداری شده -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-check"></i> فایل‌های خریداری شده
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PurchasedFiles.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var file in Model.PurchasedFiles.Take(5))
+                            {
+                                <a asp-controller="DataFiles" asp-action="Details" 
+                                   asp-route-id="@file.Id"
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">@file.Title</h6>
+                                        <small class="text-muted">@file.Category?.Name</small>
+                                    </div>
+                                    <p class="mb-1 text-muted small">
+                                        @file.Description?.Substring(0, Math.Min(50, file.Description.Length))...
+                                    </p>
+                                    <small>
+                                        <i class="bi bi-download"></i> @file.DownloadCount بار دانلود
+                                    </small>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">هنوز فایلی خریداری نکرده‌اید.</p>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Orders" asp-action="DownloadableFiles" 
+                       class="btn btn-sm btn-outline-success w-100">
+                        <i class="bi bi-download"></i> همه فایل‌های قابل دانلود
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- دسترسی سریع -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="bi bi-link-45deg"></i> دسترسی سریع
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="Orders" asp-action="MyOrders" 
+                               class="btn btn-outline-primary w-100">
+                                <i class="bi bi-receipt"></i> سفارش‌های من
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="Cart" asp-action="Index" 
+                               class="btn btn-outline-success w-100">
+                                <i class="bi bi-cart"></i> سبد خرید
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-controller="DataFiles" asp-action="Index" 
+                               class="btn btn-outline-info w-100">
+                                <i class="bi bi-shop"></i> فروشگاه فایل
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a asp-action="Settings" 
+                               class="btn btn-outline-secondary w-100">
+                                <i class="bi bi-gear"></i> تنظیمات حساب
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

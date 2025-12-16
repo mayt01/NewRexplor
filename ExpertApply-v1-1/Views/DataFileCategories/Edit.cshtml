@@ -1,0 +1,156 @@
+﻿@model Rexplor.Models.DataFileCategory
+
+@{
+    ViewData["Title"] = "ویرایش دسته‌بندی";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <!-- نمایش پیام‌ها -->
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>
+                    @successMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square"></i> ویرایش دسته‌بندی
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Hidden Id -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">نام دسته‌بندی *</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">توضیحات</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Icon -->
+                        <div class="mb-3">
+                            <label asp-for="IconClass" class="form-label">کلاس آیکن (Bootstrap Icons)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    @if (!string.IsNullOrEmpty(Model.IconClass))
+                                    {
+                                        <i class="@Model.IconClass"></i>
+                                    }
+                                </span>
+                                <input asp-for="IconClass" class="form-control" placeholder="مثال: bi-folder" />
+                            </div>
+                            <small class="text-muted">
+                                مثال:
+                                <code>bi-folder</code> ،
+                                <code>bi-database</code> ،
+                                <code>bi-mortarboard</code>
+                                <br>
+                                <a href="https://icons.getbootstrap.com/" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-link-45deg"></i> مشاهده همه آیکن‌ها
+                                </a>
+                            </small>
+                            <span asp-validation-for="IconClass" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-right"></i> بازگشت به لیست
+                            </a>
+
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info me-2">
+                                    <i class="bi bi-eye"></i> مشاهده
+                                </a>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-save"></i> ذخیره تغییرات
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- اطلاعات فعلی -->
+            <div class="card shadow-sm mt-3">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> اطلاعات فعلی
+                    </h6>
+                </div>
+@*                 <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">تاریخ ایجاد:</dt>
+                        <dd class="col-sm-8">
+                            @(Model.CreatedDate.HasValue? Model.CreatedDate.Value.ToString("yyyy/MM/dd HH:mm") : "---")
+                        </dd>
+
+                        @if (Model.ModifiedDate.HasValue)
+                        {
+                            <dt class="col-sm-4">آخرین ویرایش:</dt>
+                            <dd class="col-sm-8">
+                                @Model.ModifiedDate.Value.ToString("yyyy/MM/dd HH:mm")
+                            </dd>
+                        }
+                    </dl>
+                </div> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // پیش‌نمایش آیکن
+        document.addEventListener('DOMContentLoaded', function() {
+            const iconInput = document.querySelector('#IconClass');
+            const iconPreview = document.querySelector('.input-group-text i');
+
+            iconInput.addEventListener('input', function() {
+                const iconClass = this.value.trim();
+                if (iconClass) {
+                    iconPreview.className = iconClass;
+                } else {
+                    iconPreview.className = '';
+                }
+            });
+
+            // مقداردهی اولیه
+            if (iconInput.value) {
+                iconPreview.className = iconInput.value;
+            }
+        });
+    </script>
+}

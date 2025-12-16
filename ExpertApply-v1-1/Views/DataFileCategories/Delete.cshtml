@@ -1,0 +1,88 @@
+﻿@model Rexplor.Models.DataFileCategory
+
+@{
+    ViewData["Title"] = "حذف دسته‌بندی";
+    bool hasFiles = ViewBag.HasFiles != null && (bool)ViewBag.HasFiles;
+    int fileCount = ViewBag.FileCount != null ? (int)ViewBag.FileCount : 0;
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-trash"></i>
+                        حذف دسته‌بندی
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ توجه:</strong>
+                        این عملیات قابل بازگشت نیست.
+                    </div>
+
+                    <dl class="row mb-3">
+                        <dt class="col-sm-4">نام دسته‌بندی:</dt>
+                        <dd class="col-sm-8 fw-bold">@Model.Name</dd>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <dt class="col-sm-4">توضیحات:</dt>
+                            <dd class="col-sm-8">@Model.Description</dd>
+                        }
+                    </dl>
+
+                    @if (hasFiles)
+                    {
+                        <div class="alert alert-danger">
+                            ❌ این دسته‌بندی شامل
+                            <strong>@fileCount</strong>
+                            فایل است و امکان حذف آن وجود ندارد.
+                            <br />
+                            ابتدا فایل‌ها را حذف یا به دسته‌بندی دیگری منتقل کنید.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success">
+                            ✅ این دسته‌بندی خالی است و می‌تواند حذف شود.
+                        </div>
+                    }
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-right"></i>
+                                بازگشت
+                            </a>
+
+                            @if (hasFiles)
+                            {
+                                <button type="button" class="btn btn-danger" disabled>
+                                    <i class="bi bi-trash"></i>
+                                    حذف غیرمجاز
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                    حذف نهایی
+                                </button>
+                            }
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

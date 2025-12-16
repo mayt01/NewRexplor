@@ -1,0 +1,514 @@
+﻿@model Rexplor.Models.Main_Page.HomeViewModel
+
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+
+<!-- پاپ‌آپ پیام -->
+@if (TempData["PopupMessage"] != null)
+{
+    <div class="popup-message">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["PopupMessage"]
+    </div>
+}
+
+<!-- بخش اصلی (Hero) -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">همراه شما در مسیر پیشرفت علمی و پژوهشی</h1>
+        <p class="hero-subtitle">
+            به فروشگاه تخصصی مجموعه‌داده‌های پژوهشی خوش آمدید. در این وبسایت برای اولین بار، اطلاعات ساختاریافته‌ی گروه‌های تحقیقاتی دانشگاه‌های جهان را پیدا می‌کنید؛ داده‌هایی که حاصل بیش از پنج سال جست‌وجو، گردآوری و طبقه‌بندی است و اکنون در دسترس شماست. این مجموعه‌های ارزشمند، ساعت‌ها زمان شما را ذخیره می‌کنند و نیاز به جست‌وجوی پراکنده و وقت‌گیر در منابع مختلف را به کلی برطرف می‌سازند. برای اهداف متنوعی مانند شناسایی شبکه‌های علمی، مکاتبات پژوهشی هدفمند، بررسی دقیق زمینه‌های تحقیقاتی و برنامه‌ریزی برای همکاری‌های علمی  بین‌المللی، پاسخ سریع و معتبری در اختیارتان قرار می‌دهند. با اطمینان از جامعیت و دقت این فایل‌ها، مسیر پژوهش خود را کوتاه‌تر، مطمئن‌تر و مؤثرتر طی کنید.
+        </p>
+        <div class="hero-buttons">
+            <a class="btn hero-btn hero-btn-primary" asp-controller="DataFiles" asp-action="Index">
+                <i class="bi bi-info-circle"></i> فروشگاه داده‌های پژوهشی
+            </a>
+@*             <a asp-controller="Consultations" asp-action="Create" class="btn hero-btn hero-btn-outline">
+                <i class="bi bi-calendar-check"></i> رزرو مشاوره تخصصی
+            </a> *@
+@*             <a href="#services" class="btn hero-btn hero-btn-outline">
+                <i class="bi bi-gear"></i> ویرایش طرح پژوهشی
+            </a> *@
+        </div>
+    </div>
+</section>
+
+<!-- بخش درباره ما -->
+<section id="about" class="section about-section">
+    <h2 class="section-title">درباره ما</h2>
+    <div class="about-content">
+@*         <p class="about-text">
+            مجموعه <strong>رکسپلور (Rexplore)</strong>، متشکل از دانش‌آموختگان مقاطع کارشناسی‌ارشد و دکترای دانشگاه‌های صنعتی شریف و علم و صنعت،
+            با بیش از پنج سال تجربه در حوزه پژوهش، مقاله‌نویسی و مشاوره علمی، همراه شما در مسیر پیشرفت پژوهشی است.
+            ما با تکیه بر راهکارهای علمی و تجربه عملی، شانس موفقیت شما را در انتشار مقالات معتبر بین‌المللی و کسب موقعیت‌های پژوهش‌محور افزایش می‌دهیم.
+        </p> *@
+        <p class="about-text">
+            مجموعه <strong>رکسپلور (Rexplore)</strong>، متشکل از دانش‌آموختگان مقاطع کارشناسی‌ارشد و دکترای دانشگاه‌های صنعتی شریف و علم و صنعت،
+            با بیش از <strong>پنج سال تجربه تخصصی</strong> در حوزه پژوهش و مشاوره علمی، افتخار همراهی شما در مسیر پیشرفت پژوهشی را دارد.
+            ما با تکیه بر <strong>دانش عمیق دانشگاهی و تجربه میدانی</strong>، موفقیت شما را در انتشار مقالات معتبر بین‌المللی و کسب موقعیت‌های پژوهشی تضمین می‌کنیم.
+        </p>
+
+        <div class="data-collection-highlight">
+            <p>
+                <strong>دستاورد ویژه:</strong> مجموعه داده‌های ارزشمندی که در
+                <a asp-controller="DataFiles" asp-action="Index" class="highlight-link">
+                    فروشگاه فایل‌ها
+                </a>
+                ارائه کرده‌ایم، حاصل <strong>بیش از ۵ سال جمع‌آوری، پردازش و تحلیل داده‌های پژوهشی</strong> است که می‌تواند به‌عنوان پایه‌ای مستحکم برای تحقیقات شما مورد استفاده قرار گیرد.
+            </p>
+        </div>
+
+        <div class="team-container">
+            <!-- Member 1 -->
+            <div class="team-member floating">
+                <img src="/images/MehdiMoradi.jpg" alt="دکتر مهدی مرادی" class="team-member-img">
+                <h3>دکتر مهدی مرادی</h3>
+                <div class="team-member-role">مدیر تیم</div>
+                <p>
+                    دکترای مهندسی کامپیوتر از دانشگاه صنعتی شریف.
+                    پژوهشگر و منتور در زمینه روش تحقیق و تحلیل داده
+                </p>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="team-member floating" style="animation-delay: 0.2s;">
+                <img src="/images/MortezaZakeri.png" alt="دکتر مرتضی ذاکری" class="team-member-img">
+                <h3>دکتر مرتضی ذاکری</h3>
+                <div class="team-member-role">مدیر بخش پژوهش</div>
+                <p>
+                    دکترای مهندسی کامپیوتر از دانشگاه علم و صنعت ایران.
+                    پژوهشگر و منتور در زمینه روش تحقیق، تحلیل داده و آماده‌سازی پروپوزال‌های پژوهشی
+                </p>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="team-member floating" style="animation-delay: 0.4s;">
+                <img src="/images/AbdullahMohammadi.png" alt="مهندس عبدالله محمدی" class="team-member-img">
+                <h3>مهندس عبدالله محمدی</h3>
+                <div class="team-member-role">مدیر فنی و پشتیبانی</div>
+                <p>
+                    کارشناس ارشد مهندسی کامپیوتر از دانشگاه صنعتی شریف.
+                    متخصص در توسعه نرم‌افزار و تحلیل داده
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- بخش خدمات -->
+@* <section id="services" class="section services-section">
+    <h2 class="section-title">خدمات تخصصی ما</h2>
+    <div class="services-grid">
+        <!-- Service 1 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-journal-text"></i>
+            </div>
+            <h3>مشاوره پژوهشی</h3>
+            <p>هدایت و مشاوره در تمامی مراحل پژوهش از ایده‌پردازی تا انتشار مقاله</p>
+            <ul class="service-features">
+                <li>انتخاب موضوع مناسب</li>
+                <li>طراحی پروپوزال حرفه‌ای</li>
+                <li>راهنمایی در روش تحقیق</li>
+                <li>انتخاب مجله مناسب</li>
+            </ul>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-file-earmark-medical"></i>
+            </div>
+            <h3>ویرایش طرح پژوهشی</h3>
+            <p>ویرایش تخصصی پروپوزال، پایان‌نامه و مقالات علمی</p>
+            <ul class="service-features">
+                <li>ویرایش ساختاری و محتوایی</li>
+                <li>اصلاح گرامر و نگارش</li>
+                <li>بهبود فرمت‌بندی</li>
+                <li>ارائه گزارش کامل</li>
+            </ul>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+            <h3>ویرایش مقاله</h3>
+            <p>ویرایش تخصصی مقالات برای مجلات بین‌المللی</p>
+            <ul class="service-features">
+                <li>ویرایش Native English</li>
+                <li>اصلاح ساختار مقاله</li>
+                <li>بهبود نتایج و بحث</li>
+                <li>پاسخ به داوران</li>
+            </ul>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-code-slash"></i>
+            </div>
+            <h3>آموزش پایتون</h3>
+            <p>دوره‌های تخصصی پایتون برای پژوهش و تحلیل داده</p>
+            <ul class="service-features">
+                <li>پایه تا پیشرفته</li>
+                <li>تمرکز بر تحلیل داده</li>
+                <li>پروژه‌محور</li>
+                <li>پشتیبانی دائمی</li>
+            </ul>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <h3>مشاوره اخذ پذیرش</h3>
+            <p>راهنمایی برای اخذ پذیرش تحصیلی و موقعیت‌های پژوهشی</p>
+            <ul class="service-features">
+                <li>انتخاب دانشگاه مناسب</li>
+                <li>تهیه SOP حرفه‌ای</li>
+                <li>مکاتبه با اساتید</li>
+                <li>آماده‌سازی رزومه</li>
+            </ul>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-database"></i>
+            </div>
+            <h3>مجموعه داده‌ها</h3>
+            <p>دیتاست‌های تخصصی برای تحقیقات علمی</p>
+            <ul class="service-features">
+                <li>دیتاست‌های آماده</li>
+                <li>تحلیل پیشرفته</li>
+                <li>مستندات کامل</li>
+                <li>پشتیبانی فنی</li>
+            </ul>
+        </div>
+    </div>
+</section> *@
+<section id="services" class="section services-section">
+    <h2 class="section-title" style="color: white;">خدمات تخصصی ما</h2>
+    <div class="services-grid">
+
+        <!-- Service 4 -->
+        <div class="service-card featured">
+            <div class="service-icon">
+                <i class="bi bi-database"></i>
+            </div>
+            <h3>فروشگاه مجموعه داده‌های پژوهشی</h3>
+            <p>دیتاست‌های تخصصی برای تحقیقات علمی</p>
+            <ul class="service-features">
+                <li>دیتاست‌های آماده</li>
+                <li>مستندات کامل</li>
+                <li>پشتیبانی فنی</li>
+            </ul>
+            <a asp-controller="DataFiles" asp-action="Index" class="btn service-btn">
+                <i class="bi bi-shop"></i> مشاهده فروشگاه
+            </a>
+        </div>
+        <!-- Service 1 -->
+@*         <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-journal-text"></i>
+            </div>
+            <h3>مشاوره پژوهشی</h3>
+            <p>هدایت تخصصی در تمام مراحل پژوهش از ایده تا انتشار</p>
+            <ul class="service-features">
+                <li>انتخاب موضوع و طراحی پروپوزال</li>
+                <li>راهنمایی در روش تحقیق</li>
+                <li>انتخاب مجله مناسب</li>
+            </ul>
+            <a href="/consultation" class="btn service-btn">
+                <i class="bi bi-calendar-check"></i> رزرو مشاوره
+            </a>
+        </div> *@
+
+        <!-- Service 2 -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-file-earmark-medical"></i>
+            </div>
+            <h3>ویرایش مقاله و پایان‌نامه</h3>
+            <p>ویرایش تخصصی مقالات برای مجلات بین‌المللی</p>
+            <ul class="service-features">
+                <li>ویرایش Native English</li>
+                <li>اصلاح ساختار و محتوا</li>
+                <li>پاسخ به داوران</li>
+            </ul>
+            <a href="#contact" class="btn service-btn">
+                <i class="bi bi-envelope"></i> درخواست ویرایش
+            </a>
+        </div>
+
+        <!-- Service 3 -->
+@*         <div class="service-card">
+            <div class="service-icon">
+                <i class="bi bi-code-slash"></i>
+            </div>
+            <h3>آموزش پایتون</h3>
+            <p>دوره‌های تخصصی پایتون برای پژوهش و تحلیل داده</p>
+            <ul class="service-features">
+                <li>پایه تا پیشرفته</li>
+                <li>تمرکز بر تحلیل داده</li>
+                <li>پروژه‌محور و عملی</li>
+            </ul>
+            <a href="#contact" class="btn service-btn">
+                <i class="bi bi-info-circle"></i> اطلاعات بیشتر
+            </a>
+        </div> *@
+    </div>
+
+    <!-- دکمه مشاهده همه خدمات -->
+    <div class="text-center mt-4">
+        <a href="#all-services" class="btn btn-outline-primary" style="padding: 0.7rem 2rem; border-radius: 25px;">
+            <i class="bi bi-list-ul"></i> مشاهده همه خدمات
+        </a>
+    </div>
+</section>
+
+<!-- بخش FAQ -->
+@* <section id="faq" class="section faq-section">
+    <h2 class="section-title">سوالات متداول</h2>
+    <div class="faq-container">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>مدت زمان بررسی مدارک چقدر است؟</h3>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>زمان بررسی به نوع درخواست و پژوهش هدف بستگی دارد، اما معمولاً بین ۲ تا ۶ هفته متغیر است. برای خدمات فوری می‌توانید از پلن VIP استفاده کنید.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>آیا در نوشتن مقاله هم کمک می‌کنید؟</h3>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>بله، تیم ما در زمینه نگارش مقالات علمی تخصص دارد و به شما خدمات کامل از ایده‌پردازی تا سابمیت نهایی ارائه می‌دهد.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>هزینه خدمات چگونه محاسبه می‌شود؟</h3>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>هزینه بر اساس نوع خدمت، پیچیدگی پروژه و زمان مورد نیاز تعیین می‌شود. پس از بررسی اولیه، پیش‌فاکتور دقیق ارائه می‌گردد.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>آیا مشاوره اولیه رایگان است؟</h3>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>بله، یک جلسه مشاوره اولیه ۳۰ دقیقه‌ای به صورت رایگان ارائه می‌شود تا بتوانیم نیازهای شما را به‌طور دقیق بررسی کنیم.</p>
+            </div>
+        </div>
+    </div>
+</section> *@
+<!-- بخش FAQ -->
+<section id="faq" class="section faq-section">
+    <h2 class="section-title">سوالات متداول</h2>
+    <div class="faq-container">
+        <!-- FAQ 1 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>مدت زمان بررسی مدارک چقدر است؟</h3>
+                <span class="faq-number">1</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>زمان بررسی به نوع درخواست و پژوهش هدف بستگی دارد، اما معمولاً بین ۲ تا ۶ هفته متغیر است. برای خدمات فوری می‌توانید از پلن VIP استفاده کنید.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>آیا در نوشتن مقاله هم کمک می‌کنید؟</h3>
+                <span class="faq-number">2</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>بله، تیم ما در زمینه نگارش مقالات علمی تخصص دارد و به شما خدمات کامل از ایده‌پردازی تا سابمیت نهایی ارائه می‌دهد.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>هزینه خدمات چگونه محاسبه می‌شود؟</h3>
+                <span class="faq-number">3</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>هزینه بر اساس نوع خدمت، پیچیدگی پروژه و زمان مورد نیاز تعیین می‌شود. پس از بررسی اولیه، پیش‌فاکتور دقیق ارائه می‌گردد.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>آیا مشاوره اولیه رایگان است؟</h3>
+                <span class="faq-number">4</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>بله، یک جلسه مشاوره اولیه ۳۰ دقیقه‌ای به صورت رایگان ارائه می‌شود تا بتوانیم نیازهای شما را به‌طور دقیق بررسی کنیم.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 5 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>چگونه می‌توانم از کیفیت خدمات اطمینان حاصل کنم؟</h3>
+                <span class="faq-number">5</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>ما نمونه کارهای موفق و نظرات مشتریان قبلی را ارائه می‌دهیم. همچنین گارانتی بازگشت وجه در صورت عدم رضایت داریم.</p>
+            </div>
+        </div>
+
+        <!-- FAQ 6 -->
+        <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(this)">
+                <h3>آیا امکان پرداخت اقساطی وجود دارد؟</h3>
+                <span class="faq-number">6</span>
+                <button class="faq-toggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="faq-answer">
+                <p>بله، برای پروژه‌های بزرگ و بلندمدت امکان پرداخت اقساطی وجود دارد. شرایط آن در قرارداد ذکر می‌شود.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- بخش تماس -->
+<section id="contact" class="section contact-section">
+    <h2 class="section-title" style="color: white;">تماس با ما</h2>
+    <form method="post" action="@Url.Action("Create", "ContactUs")" class="contact-form">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="Name" class="form-label">نام کامل</label>
+                <input type="text" class="form-control" id="Name" name="Name" required placeholder="نام و نام خانوادگی">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Email" class="form-label">ایمیل</label>
+                <input type="email" class="form-control" id="Email" name="Email" required placeholder="example@domain.com">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="Subject" class="form-label">موضوع</label>
+            <input type="text" class="form-control" id="Subject" name="Subject" required placeholder="موضوع پیام">
+        </div>
+        <div class="mb-4">
+            <label for="Message" class="form-label">پیام شما</label>
+            <textarea class="form-control" id="Message" name="Message" rows="5" required placeholder="متن پیام خود را بنویسید..."></textarea>
+        </div>
+        <button type="submit" class="btn contact-btn">
+            <i class="bi bi-send"></i> ارسال پیام
+        </button>
+    </form>
+</section>
+
+<!-- دکمه بازگشت به بالا -->
+<a id="backToTop" href="#" class="back-to-top">
+    <i class="bi bi-chevron-up"></i>
+</a>
+
+@section Scripts {
+    <script>
+        // باز و بسته کردن FAQ
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const toggleIcon = element.querySelector('.faq-toggle i');
+
+            answer.classList.toggle('active');
+
+            if (answer.classList.contains('active')) {
+                toggleIcon.classList.remove('bi-chevron-down');
+                toggleIcon.classList.add('bi-chevron-up');
+            } else {
+                toggleIcon.classList.remove('bi-chevron-up');
+                toggleIcon.classList.add('bi-chevron-down');
+            }
+        }
+
+        // دکمه بازگشت به بالا
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // اسکرول نرم
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // هدر آکاردئون FAQ به صورت خودکار
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                // بستن سایر FAQ‌ها
+                document.querySelectorAll('.faq-answer').forEach(answer => {
+                    if (answer !== this.nextElementSibling) {
+                        answer.classList.remove('active');
+                        const icon = answer.previousElementSibling.querySelector('.faq-toggle i');
+                        if (icon) {
+                            icon.classList.remove('bi-chevron-up');
+                            icon.classList.add('bi-chevron-down');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

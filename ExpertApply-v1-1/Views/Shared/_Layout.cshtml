@@ -1,0 +1,452 @@
+﻿@using System.Security.Claims
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rexplor | Research & Explore</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="~/Logo-R.png">
+
+    <!-- فونت Vazir از CDN -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+
+    <!-- استایل‌های اصلی -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- استایل‌های سفارشی پروژه -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ImageSlider.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/VoiceFeedbackSlider.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ExpertApply.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ExpertApply_v1_1.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header id="main-header" class="visible-header">
+        <nav class="navbar navbar-expand-lg py-2">
+            <div class="container">
+                <!-- لوگو -->
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+@*                     <div class="logo-container me-2">
+                        <i class="bi bi-compass fs-3 text-warning"></i>
+                    </div> *@
+                    <div class="brand-text">
+                        <h5 class="mb-0">Rexplor</h5>
+                        <small class="text-light opacity-75" style="font-size: 0.7rem;">Research & Explore</small>
+                    </div>
+                </a>
+
+                <!-- دکمه هامبورگر -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- منوی اصلی -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <!-- خانه -->
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door"></i> خانه
+                            </a>
+                        </li>
+
+@*                         <!-- خدمات -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear"></i> خدمات
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <span class="item-text">مشاوره پژوهشی</span>
+                                        <span class="badge bg-warning">جدید</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <span class="item-text">ویرایش طرح پژوهشی</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <span class="item-text">ویرایش مقاله</span>
+                                        <span class="badge bg-success">پربازدید</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <span class="item-text">آموزش پایتون</span>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-center text-primary" href="#services">
+                                        <i class="bi bi-arrow-left"></i> مشاهده همه خدمات
+                                    </a>
+                                </li>
+                            </ul>
+                        </li> *@
+
+                        <!-- محصولات -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-box-seam"></i> محصولات
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                       asp-controller="DataFiles" asp-action="Index">
+                                        <span class="item-text">فروشگاه داده پژوهشی</span>
+                                        @if (ViewBag.FileCount != null)
+                                        {
+                                            <span class="badge bg-info">@ViewBag.FileCount</span>
+                                        }
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                        <span class="item-text">دوره آموزشی مقاله‌نویسی</span>
+                                        <span class="badge bg-danger">به زودی</span>
+                                    </a>
+                                </li>
+@*                                 <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-center text-primary" asp-controller="DataFiles" asp-action="Index">
+                                        <i class="bi bi-shop"></i> مشاهده فروشگاه
+                                    </a>
+                                </li> *@
+                            </ul>
+                        </li>
+
+                        <!-- فایل‌ها -->
+@*                         <li class="nav-item">
+                            <a class="nav-link" asp-controller="DataFiles" asp-action="Index">
+                                <i class="bi bi-files"></i> فایل‌ها
+                            </a>
+                        </li> *@
+
+                        <!-- سوالات متداول -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="faq">
+                                <i class="bi bi-question-circle"></i> سوالات متداول
+                            </a>
+                        </li>
+
+                        <!-- درباره ما -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="about">
+                                <i class="bi bi-info-circle"></i> درباره ما
+                            </a>
+                        </li>
+
+                        <!-- تماس با ما -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="contact">
+                                <i class="bi bi-telephone"></i> تماس با ما
+                            </a>
+                        </li>
+
+                        <!-- بخش کاربری -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- داشبورد کاربر -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="UserDashboard" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> داشبورد
+                                </a>
+                            </li>
+
+@*                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="Consultations" asp-action="Index">
+                                    <i class="bi bi-calendar-check"></i> مشاوره‌های من
+                                    @if (ViewBag.PendingConsultations > 0)
+                                    {
+                                        <span class="badge bg-warning" style="font-size: 0.6rem; position: absolute; top: -5px; right: -5px;">
+                                            @ViewBag.PendingConsultations
+                                        </span>
+                                    }
+                                </a>
+                            </li> *@
+
+
+                            <!-- سفارش‌ها -->
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" asp-controller="Orders" asp-action="MyOrders">
+                                    <i class="bi bi-receipt"></i> سفارش‌ها
+                                    @if (ViewBag.PendingOrders > 0)
+                                    {
+                                        <span class="badge bg-warning" style="font-size: 0.6rem; position: absolute; top: -5px; right: -5px;">
+                                            @ViewBag.PendingOrders
+                                        </span>
+                                    }
+                                </a>
+                            </li>
+
+                            <!-- سبد خرید -->
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart3"></i> سبد خرید
+                                    <span id="cart-count" class="badge bg-danger">*</span>
+                                </a>
+                            </li>
+
+                            <!-- پنل ادمین -->
+                            @if (User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-warning" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-shield-check"></i> مدیریت
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">
+                                                <i class="bi bi-speedometer"></i> داشبورد مدیریت
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="DataFileCategories" asp-action="Index">
+                                                <i class="bi bi-tags"></i> مدیریت دسته‌بندی‌ها
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="DataFiles" asp-action="Create">
+                                                <i class="bi bi-cloud-upload"></i> آپلود فایل جدید
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                                <i class="bi bi-gear"></i> تنظیمات حساب
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <!-- بخش ورود/خروج -->
+                    <div class="ms-lg-3 mt-3 mt-lg-0">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <!-- فوتر -->
+    @* <footer class="text-center mt-5 footercontainer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <p class="contact-item">
+                        <img src="icons/location1.png" alt="آدرس" width="20" height="20" class="contact-icon">
+                        آدرس: تهران، خیابان آزادی، کوچه قدیر، پلاک 7
+                    </p>
+                    <p class="contact-item">
+                        <img src="icons/phone.png" alt="تلفن" width="20" height="20" class="contact-icon">
+                        تلفن: <a href="tel:02112345678">021-82805413</a>
+                    </p>
+                    <p class="contact-item">
+                        <img src="icons/mail3.png" alt="ایمیل" width="20" height="20" class="contact-icon">
+                        ایمیل: <a href="mailto:info@rexplor.ir">info@rexplor.ir</a>
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>شبکه‌های اجتماعی</h5>
+                    <a href="https://instagram.com/eee" class="social-link">
+                        <img src="icons/Instagram.png" alt="اینستاگرام" width="20" height="20">
+                        اینستاگرام
+                    </a>
+                    <a href="https://t.me/eee" class="social-link">
+                        <img src="icons/Telegram.png" alt="تلگرام" width="20" height="20">
+                        تلگرام
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE'>
+                        <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE' alt='' style='cursor:pointer' code='QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE'>
+                    </a>
+                </div>
+            </div>
+            <div class="border-top pt-3">
+                <p>&copy; <span id="currentYear"></span> Rexplor. تمام حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer> *@
+
+    <!-- فوتر -->
+    <footer class="footercontainer">
+        <div class="container">
+            <div class="row">
+                <!-- ستون 1: اطلاعات تماس -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-logo">
+                        <i class="bi bi-compass fs-3"></i>
+                        <div class="footer-logo-text">
+                            <h4>Rexplor</h4>
+                            <small>Research & Explore</small>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <p class="contact-item">
+                            <img src="icons/location1.png" alt="آدرس" width="20" height="20" class="contact-icon">
+                            <span>آدرس: تهران، خیابان آزادی، کوچه قدیر، پلاک 7</span>
+                        </p>
+                        <p class="contact-item">
+                            <img src="icons/phone.png" alt="تلفن" width="20" height="20" class="contact-icon">
+                            تلفن: <a href="tel:02182805413">021-82805413</a>
+                        </p>
+                        <p class="contact-item">
+                            <img src="icons/mail3.png" alt="ایمیل" width="20" height="20" class="contact-icon">
+                            ایمیل: <a href="mailto:info@rexplor.ir">info@rexplor.ir</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ستون 2: لینک‌های سریع -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>دسترسی سریع</h5>
+                    <ul class="quick-links">
+                        <li><a href="/"><i class="bi bi-house"></i> صفحه اصلی</a></li>
+                        <li><a href="#services"><i class="bi bi-gear"></i> خدمات</a></li>
+                        <li><a href="#about"><i class="bi bi-info-circle"></i> درباره ما</a></li>
+                        <li><a href="#faq"><i class="bi bi-question-circle"></i> سوالات متداول</a></li>
+                        <li><a href="#contact"><i class="bi bi-telephone"></i> تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <!-- ستون 3: شبکه‌های اجتماعی -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>شبکه‌های اجتماعی</h5>
+                    <div class="social-links">
+                        <a href="https://instagram.com/eee" class="social-link">
+                            <img src="icons/Instagram.png" alt="اینستاگرام">
+                            اینستاگرام
+                        </a>
+                        <a href="https://t.me/eee" class="social-link">
+                            <img src="icons/Telegram.png" alt="تلگرام">
+                            تلگرام
+                        </a>
+@*                         <a href="https://linkedin.com" class="social-link">
+                            <img src="icons/linkedin.png" alt="لینکدین">
+                            لینکدین
+                        </a> *@
+                    </div>
+                </div>
+
+                <!-- ستون 4: نماد اعتماد -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="enamad-section">
+                        <h5>نماد اعتماد الکترونیک</h5>
+                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE'>
+                            <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE' alt='نماد اعتماد الکترونیک'>
+                        </a>
+                        <p class="mt-2 text-muted" style="color: #adb5bd !important; font-size: 0.8rem;">
+                            کلیه خدمات این سایت دارای نماد اعتماد الکترونیک می‌باشد
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top pt-3">
+                <p>&copy; <span id="currentYear"></span> Rexplor. تمام حقوق محفوظ است.</p>
+                <p class="text-muted mt-1" style="color: #adb5bd !important; font-size: 0.85rem;">
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- اسکریپت‌ها -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/ImageSlider.js" asp-append-version="true"></script>
+    <script src="~/js/VoiceFeedbackSlider.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // نمایش سال جاری
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // آپدیت تعداد سبد خرید
+        function updateCartCount() {
+            fetch('/Cart/GetCartCount')
+                .then(response => {
+                    if (!response.ok) return;
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.count !== undefined) {
+                        const cartCount = document.getElementById('cart-count');
+                        if (cartCount) {
+                            cartCount.textContent = data.count > 0 ? data.count : '';
+                            cartCount.style.display = data.count > 0 ? 'inline-block' : 'none';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error updating cart count:', error));
+        }
+
+        // بارگذاری اولیه
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+
+        // اسکریپت اسکرول هدر
+        let lastScrollY = window.scrollY;
+        const header = document.getElementById("main-header");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                header.classList.remove("visible-header");
+                header.classList.add("hidden-header");
+            } else {
+                header.classList.remove("hidden-header");
+                header.classList.add("visible-header");
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        // فعال کردن منوهای کشویی روی هاور (دسکتاپ)
+        if (window.innerWidth > 992) {
+            const dropdowns = document.querySelectorAll('.nav-item.dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('mouseenter', function() {
+                    const toggle = this.querySelector('.dropdown-toggle');
+                    if (toggle) {
+                        toggle.setAttribute('aria-expanded', 'true');
+                        this.querySelector('.dropdown-menu').classList.add('show');
+                    }
+                });
+                dropdown.addEventListener('mouseleave', function() {
+                    setTimeout(() => {
+                        if (!this.matches(':hover')) {
+                            const toggle = this.querySelector('.dropdown-toggle');
+                            if (toggle) {
+                                toggle.setAttribute('aria-expanded', 'false');
+                                this.querySelector('.dropdown-menu').classList.remove('show');
+                            }
+                        }
+                    }, 300);
+                });
+            });
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

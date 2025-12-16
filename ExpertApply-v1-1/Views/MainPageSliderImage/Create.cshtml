@@ -1,0 +1,20 @@
+﻿@model Rexplor.Models.MainPageSliderImage
+
+<form method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="@Model.ImageFile">Choose Image:</label>
+        <input type="file" asp-for="@Model.ImageFile" class="form-control" />
+        <span asp-validation-for="@Model.ImageFile" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="@Model.ImageData">Choose Data:</label>
+        <input type="file" asp-for="@Model.ImageData" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="@Model.Caption">Choose Caption:</label>
+        <input type="text" asp-for="@Model.Caption" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Upload Image" class="btn btn-primary" />
+    </div>
+</form>

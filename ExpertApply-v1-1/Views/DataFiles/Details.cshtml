@@ -1,0 +1,233 @@
+﻿@using Rexplor.Extensions
+@using System.Security.Claims
+@model DataFile
+
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">فایل‌ها</a></li>
+            <li class="breadcrumb-item">
+                <a asp-action="Category" asp-route-id="@Model.CategoryId">
+                    @Model.Category?.Name
+                </a>
+            </li>
+            <li class="breadcrumb-item active">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- اطلاعات فایل -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h2 class="card-title">@Model.Title</h2>
+                        <h3 class="text-success">@Model.Price.ToString("N0") تومان</h3>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="badge bg-primary">
+                            <i class="@Model.Category?.IconClass"></i>
+                            @Model.Category?.Name
+                        </span>
+                        <span class="badge bg-secondary">
+                            @Model.FileSize.ToFileSize()
+                        </span>
+                        <span class="badge bg-info">
+                            @Model.FileExtension
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>توضیحات:</h5>
+                        <p class="text-justify">@Model.Description</p>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Tags))
+                    {
+                        <div class="mb-4">
+                            <h5>تگ‌ها:</h5>
+                            <div>
+                                @foreach (var tag in Model.Tags.Split(','))
+                                {
+                                    <span class="badge bg-light text-dark">@tag.Trim()</span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <div class="row text-center mb-4">
+                        <div class="col-md-3">
+                            <div class="border rounded p-3">
+                                <i class="bi bi-eye display-6 text-primary"></i>
+                                <h5 class="mt-2">@Model.ViewCount</h5>
+                                <small class="text-muted">بازدید</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded p-3">
+                                <i class="bi bi-download display-6 text-success"></i>
+                                <h5 class="mt-2">@Model.DownloadCount</h5>
+                                <small class="text-muted">دانلود</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded p-3">
+                                <i class="bi bi-star display-6 text-warning"></i>
+                                <h5 class="mt-2">@Model.Rating.ToString("0.0")</h5>
+                                <small class="text-muted">امتیاز</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="border rounded p-3">
+                                <i class="bi bi-chat display-6 text-info"></i>
+                                <h5 class="mt-2">@Model.ReviewCount</h5>
+                                <small class="text-muted">نظر</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- سایدبار -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-person"></i> فروشنده
+                    </h5>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i>
+                            آپلود شده در: @Model.UpdatedDate.ToString("yyyy/MM/dd")
+                        </small>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-grid gap-2">
+@*                         @if (User.Identity.IsAuthenticated)
+                        {
+                            <button class="btn btn-success btn-lg">
+                                <i class="bi bi-cart-plus"></i> افزودن به سبد خرید
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-heart"></i> افزودن به علاقه‌مندی‌ها
+                            </button>
+                        } *@
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline w-100">
+                                <input type="hidden" name="fileId" value="@Model.Id" />
+                                <input type="hidden" name="quantity" value="1" />
+                                <button type="submit" class="btn btn-success btn-lg w-100">
+                                    <i class="bi bi-cart-plus"></i> افزودن به سبد خرید
+                                </button>
+                            </form>
+
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline w-100">
+                                <input type="hidden" name="fileId" value="@Model.Id" />
+                                <input type="hidden" name="quantity" value="1" />
+                                <button type="submit" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-heart"></i> افزودن به علاقه‌مندی‌ها
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Login"
+                               class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> ورود برای خرید
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- اطلاعات فنی -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-info-circle"></i> اطلاعات فنی
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-hdd text-primary"></i>
+                            <strong>حجم:</strong> @Model.FileSize.ToFileSize()
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-file-earmark-text text-success"></i>
+                            <strong>فرمت:</strong> @Model.FileExtension
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-calendar-check text-warning"></i>
+                            <strong>آخرین بروزرسانی:</strong> @Model.UpdatedDate.ToString("yyyy/MM/dd")
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle text-success"></i>
+                            <strong>وضعیت:</strong>
+                            <span class="badge bg-success">فعال</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="btn-group" role="group">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-right"></i> بازگشت به لیست
+        </a>
+
+        @if (User.Identity.IsAuthenticated &&
+                User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> ویرایش
+            </a>
+
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                <i class="bi bi-trash"></i> حذف
+            </a>
+        }
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
+                <input type="hidden" name="fileId" value="@Model.Id" />
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-cart-plus"></i> افزودن به سبد خرید (@Model.Price.ToString("N0") تومان)
+                </button>
+            </form>
+        }
+    </div>
+</div>
+
+<!-- Extension Method برای نمایش حجم فایل -->
+@functions {
+    public class FileSizeExtensions
+    {
+        // public static string ToFileSize(this long bytes)
+        // {
+        //     string[] sizes = { "B", "KB", "MB", "GB" };
+        //     double len = bytes;
+        //     int order = 0;
+        //     while (len >= 1024 && order < sizes.Length - 1)
+        //     {
+        //         order++;
+        //         len /= 1024;
+        //     }
+        //     return $"{len:0.##} {sizes[order]}";
+        // }
+    }
+}

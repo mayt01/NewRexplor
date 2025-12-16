@@ -1,0 +1,80 @@
+﻿@model List<Rexplor.Models.PI>
+
+@{
+    ViewData["Title"] = "Research PIs";
+}
+
+<h2 class="mb-4">فهرست اطلاعات اساتید</h2>
+
+<!-- فرم جستجوی پیشرفته -->
+<form method="get" class="mb-4">
+    <div class="row g-2">
+        <div class="col-md-3">
+            <input type="text" name="searchUniversity" class="form-control" placeholder="University" value="@ViewBag.SearchUniversity" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="searchProfessor" class="form-control" placeholder="Professor" value="@ViewBag.SearchProfessor" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="searchField" class="form-control" placeholder="Research Field" value="@ViewBag.SearchField" />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    @foreach (var pi in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                @* <img src="@(!string.IsNullOrEmpty(pi.ProfilePictureUrl) ? pi.ProfilePictureUrl : "/images/default-profile.png")"
+                     class="card-img-top" alt="@pi.PIName" style="height: 250px; object-fit: cover;"> *@
+                <div class="card-body">
+                    <h5 class="card-title">@pi.PIName</h5>
+                    <p class="card-text">
+                        <strong>University:</strong> @pi.UniversityName <br />
+                        <strong>Research Field:</strong> @pi.ResearchField
+                    </p>
+                    <p class="card-text">
+                        <a href="@pi.GoogleScholarUrl" target="_blank" class="btn btn-sm btn-outline-primary mb-1">Google Scholar</a>
+                        <a href="@pi.WebsiteUrl" target="_blank" class="btn btn-sm btn-outline-secondary mb-1">Website</a><br />
+                        <a href="mailto:@pi.Email" class="btn btn-sm btn-outline-success mb-1">Email</a>
+                    </p>
+                    <button class="btn btn-info" onclick="showSummary('@pi.GoogleScholarUrl')">
+                        Show Summary
+                    </button> 
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal برای نمایش خلاصه -->
+<div class="modal fade" id="summaryModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Article Summary</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="summaryContent">
+        Loading...
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showSummary(scholarLink) {
+    document.getElementById("summaryContent").innerText = "Loading...";
+    fetch(`/PI/GetRecentArticlesSummaryByLink?scholarLink=${encodeURIComponent(scholarLink)}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("summaryContent").innerText = data.summary;
+            var modal = new bootstrap.Modal(document.getElementById('summaryModal'));
+            modal.show();
+        });
+}
+</script>

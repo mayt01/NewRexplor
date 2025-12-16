@@ -1,0 +1,65 @@
+﻿<!-- Views/DataFiles/Delete.cshtml -->
+@model DataFile
+
+@{
+    ViewData["Title"] = "حذف فایل";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        @ViewData["Title"]
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="text-danger">آیا از حذف این فایل مطمئن هستید؟</h5>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-circle"></i>
+                        این عمل قابل بازگشت نیست!
+                    </div>
+
+                    <div class="mb-4">
+                        <h6>اطلاعات فایل:</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <strong>عنوان:</strong> @Model.Title
+                            </li>
+                            <li class="list-group-item">
+                                <strong>دسته‌بندی:</strong> @Model.Category?.Name
+                            </li>
+                            <li class="list-group-item">
+                                <strong>قیمت:</strong> @Model.Price.ToString("N0") تومان
+                            </li>
+                            <li class="list-group-item">
+                                <strong>تعداد دانلود:</strong> @Model.DownloadCount
+                            </li>
+@*                             <li class="list-group-item">
+                                <strong>تاریخ ایجاد:</strong> @Model.CreatedDate.ToString("yyyy/MM/dd")
+                            </li> *@
+                        </ul>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Details" asp-route-id="@Model.Id"
+                               class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> بازگشت
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> حذف قطعی
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

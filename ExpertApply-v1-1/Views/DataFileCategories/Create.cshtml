@@ -1,0 +1,86 @@
+﻿@model DataFileCategory
+
+@{
+    ViewData["Title"] = "ایجاد دسته‌بندی جدید";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-plus-circle"></i>
+                        @ViewData["Title"]
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control"
+                                   placeholder="مثال: تحقیقات بازار" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"
+                                      placeholder="توضیحات درباره این دسته‌بندی..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IconClass" class="form-label"></label>
+                                <input asp-for="IconClass" class="form-control"
+                                       value="bi-folder"
+                                       placeholder="bi-folder" />
+                                <small class="text-muted">کلاس آیکون Bootstrap Icons</small>
+                                <span asp-validation-for="IconClass" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle"></i> انصراف
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> ایجاد دسته‌بندی
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- راهنما -->
+            <div class="card mt-4 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> راهنما</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <strong>آیکون‌ها:</strong> از
+                            <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a>
+                            استفاده کنید.
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle text-success"></i>
+                            <strong>مثال‌ها:</strong> bi-graph-up, bi-cash-coin, bi-mortarboard
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

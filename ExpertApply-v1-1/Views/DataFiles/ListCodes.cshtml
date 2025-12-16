@@ -1,0 +1,79 @@
+﻿@* Views/DataFiles/ListCodes.cshtml *@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "لیست کدهای دیتافایل‌ها";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6">
+            <i class="bi bi-list-ol text-primary"></i>
+            @ViewData["Title"]
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-right"></i> بازگشت به لیست فایل‌ها
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>کد یکتا</th>
+                            <th>عنوان</th>
+                            <th>آخرین بروزرسانی</th>
+                            <th>وضعیت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="badge bg-info">@item.UniqueCode</span>
+                                </td>
+                                <td>@item.Title</td>
+                                <td>@item.UpdatedDate.ToString("yyyy/MM/dd")</td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success">فعال</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">غیرفعال</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                            onclick="copyToClipboard('@item.UniqueCode')">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                toastr.success('کد ' + text + ' کپی شد');
+            }).catch(function(err) {
+                toastr.error('خطا در کپی کردن کد');
+            });
+        }
+    </script>
+}

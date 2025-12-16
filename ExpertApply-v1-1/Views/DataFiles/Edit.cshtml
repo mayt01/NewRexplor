@@ -1,0 +1,98 @@
+﻿<!-- Views/DataFiles/Edit.cshtml -->
+@model EditDataFileViewModel
+
+@{
+    ViewData["Title"] = "ویرایش فایل";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        <i class="bi bi-pencil-square"></i>
+                        @ViewData["Title"]
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Price" class="form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Price" class="form-control" type="number" />
+                                    <span class="input-group-text">تومان</span>
+                                </div>
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CategoryId" class="form-label"></label>
+                                <select asp-for="CategoryId" class="form-select"
+                                        asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Tags" class="form-label"></label>
+                            <input asp-for="Tags" class="form-control"
+                                   placeholder="تگ‌ها را با کاما جدا کنید" />
+                            <span asp-validation-for="Tags" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                <label asp-for="IsActive" class="form-check-label"></label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="NewFile" class="form-label"></label>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i>
+                                اگر می‌خواهید فایل را تغییر دهید، فایل جدید را انتخاب کنید.
+                                در غیر این صورت، فایل فعلی باقی می‌ماند.
+                            </div>
+                            <input asp-for="NewFile" class="form-control" type="file"
+                                   accept=".xlsx,.xls,.csv" />
+                            <span asp-validation-for="NewFile" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Details" asp-route-id="@Model.Id"
+                               class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-x-circle"></i> انصراف
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> ذخیره تغییرات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

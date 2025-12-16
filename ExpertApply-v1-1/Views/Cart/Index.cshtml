@@ -1,0 +1,165 @@
+﻿@model List<ShoppingCartItem>
+
+@{
+    ViewData["Title"] = "سبد خرید";
+    var totalAmount = Model.Sum(item => item.Total);
+}
+
+<div class="container py-4">
+    <h1 class="mb-4">
+        <i class="bi bi-cart3 text-primary"></i>
+        @ViewData["Title"]
+    </h1>
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-cart-x display-1 text-muted mb-3"></i>
+                <h4 class="text-muted">سبد خرید شما خالی است</h4>
+                <p class="text-muted mb-4">محصولاتی را به سبد خرید خود اضافه کنید.</p>
+                <a asp-controller="DataFiles" asp-action="Index" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-left"></i> مشاهده فایل‌ها
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- لیست آیتم‌ها -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">محصولات انتخاب شده</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th class="text-center">قیمت</th>
+                                        <th class="text-center">تعداد</th>
+                                        <th class="text-center">مجموع</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <i class="bi bi-file-earmark-excel text-primary fs-4"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">@item.Title</h6>
+                                                        <small class="text-muted">@item.CategoryName</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="text-success fw-bold">
+                                                    @item.Price.ToString("N0") تومان
+                                                </span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <form asp-action="UpdateQuantity" method="post" class="d-inline">
+                                                    <input type="hidden" name="fileId" value="@item.DataFileId" />
+                                                    <div class="input-group input-group-sm" style="width: 120px;">
+                                                        <button class="btn btn-outline-secondary" type="submit"
+                                                                onclick="this.form.quantity.value=Math.max(1, @item.Quantity-1)">
+                                                            <i class="bi bi-dash"></i>
+                                                        </button>
+                                                        <input type="number" name="quantity" value="@item.Quantity"
+                                                               class="form-control text-center" min="1" max="10" />
+                                                        <button class="btn btn-outline-secondary" type="submit"
+                                                                onclick="this.form.quantity.value=@item.Quantity+1">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="fw-bold">
+                                                    @item.Total.ToString("N0") تومان
+                                                </span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <form asp-action="RemoveFromCart" method="post">
+                                                    <input type="hidden" name="fileId" value="@item.DataFileId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a asp-controller="DataFiles" asp-action="Index"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left"></i> ادامه خرید
+                            </a>
+                            <form asp-action="ClearCart" method="post">
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="bi bi-cart-x"></i> خالی کردن سبد
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خلاصه سفارش -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-receipt"></i> خلاصه سفارش
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">تعداد محصولات:</span>
+                                <span class="fw-bold">@Model.Sum(item => item.Quantity)</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">جمع کل:</span>
+                                <span class="fw-bold">@totalAmount.ToString("N0") تومان</span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="text-muted">مالیات:</span>
+                                <span class="fw-bold">0 تومان</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="h5">مبلغ قابل پرداخت:</span>
+                                <span class="h4 text-success">@totalAmount.ToString("N0") تومان</span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <a asp-action="Checkout" class="btn btn-success btn-lg">
+                                <i class="bi bi-lock"></i> ادامه جهت پرداخت
+                            </a>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle"></i>
+                            <small>
+                                پس از پرداخت موفق، لینک دانلود فایل‌ها در پنل کاربری شما فعال می‌شود.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

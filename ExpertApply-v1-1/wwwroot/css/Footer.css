@@ -1,0 +1,298 @@
+﻿.footercontainer {
+    background: rgba(255, 211, 0);
+    padding: 15px;
+}
+
+.contact-item {
+    text-align: right;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.contact-icon {
+    margin-left: 8px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    color: #333;
+    text-decoration: none;
+}
+
+    .social-link img {
+        margin-left: 8px;
+    }
+
+/* ===== استایل‌های فوتر ===== */
+.footercontainer {
+    background: linear-gradient(135deg, #0a2d5e 0%, #034799 100%);
+    color: #ffffff;
+    padding: 3rem 0 1.5rem;
+    margin-top: auto;
+    border-top: 5px solid #FFD300;
+    position: relative;
+    overflow: hidden;
+}
+
+    .footercontainer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M20,20 Q40,5 60,20 T100,20 L100,80 Q80,95 60,80 T20,80 Z" fill="%23FFD300"/></svg>');
+        background-size: 150px;
+        opacity: 0.1;
+    }
+
+    .footercontainer .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* عناوین */
+    .footercontainer h5 {
+        color: #FFD300;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+        .footercontainer h5::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 3px;
+            background: #FFD300;
+            border-radius: 2px;
+        }
+
+/* آیتم‌های تماس */
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+    color: #e9ecef;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.contact-icon {
+    margin-left: 0.8rem;
+    filter: brightness(0) saturate(100%) invert(86%) sepia(95%) saturate(1233%) hue-rotate(358deg) brightness(105%) contrast(104%);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+}
+
+.contact-item a {
+    color: #FFD300;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+    .contact-item a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+/* لینک‌های شبکه‌های اجتماعی */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: #e9ecef;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 211, 0, 0.1);
+}
+
+    .social-link:hover {
+        background: rgba(255, 211, 0, 0.15);
+        color: #FFD300;
+        transform: translateX(-5px);
+        border-color: rgba(255, 211, 0, 0.3);
+    }
+
+    .social-link img {
+        width: 24px;
+        height: 24px;
+        transition: transform 0.3s ease;
+    }
+
+    .social-link:hover img {
+        transform: scale(1.1);
+    }
+
+/* بخش نماد اعتماد الکترونیک */
+.enamad-section {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 211, 0, 0.2);
+}
+
+    .enamad-section a {
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+
+        .enamad-section a:hover {
+            transform: scale(1.05);
+        }
+
+    .enamad-section img {
+        max-width: 120px;
+        height: auto;
+        border-radius: 8px;
+    }
+
+/* خط جداکننده */
+.footercontainer .border-top {
+    border-color: rgba(255, 211, 0, 0.3) !important;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+}
+
+    .footercontainer .border-top p {
+        color: #adb5bd;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+/* لوگوی فوتر */
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+    .footer-logo i {
+        color: #FFD300;
+        font-size: 2rem;
+    }
+
+.footer-logo-text h4 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-logo-text small {
+    color: #FFD300;
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+/* لینک‌های سریع */
+.quick-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+    .quick-links li {
+        margin-bottom: 0.7rem;
+    }
+
+    .quick-links a {
+        color: #e9ecef;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .quick-links a:hover {
+            color: #FFD300;
+            padding-right: 5px;
+        }
+
+        .quick-links a i {
+            font-size: 0.9rem;
+        }
+
+/* ===== ریسپانسیو فوتر ===== */
+@media (max-width: 768px) {
+    .footercontainer {
+        padding: 2rem 0 1rem;
+        text-align: center;
+    }
+
+        .footercontainer h5::after {
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+    .contact-item {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .contact-icon {
+        margin-left: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .social-link {
+        justify-content: center;
+    }
+
+    .footer-logo {
+        justify-content: center;
+    }
+
+    .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+        .quick-links li {
+            margin-bottom: 0;
+        }
+}
+
+@media (max-width: 576px) {
+    .footercontainer {
+        padding: 1.5rem 0 1rem;
+    }
+
+        .footercontainer h5 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+    .contact-item {
+        font-size: 0.9rem;
+    }
+
+    .social-link {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}

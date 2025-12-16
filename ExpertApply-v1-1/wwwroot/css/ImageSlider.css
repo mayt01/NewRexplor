@@ -1,0 +1,139 @@
+﻿* {
+    box-sizing: border-box
+}
+
+/* Slideshow container */
+.slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+    display: flex;
+}
+
+.mySlides {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    gap: 1rem;
+    gap: 20px; /* Adds space between boxes */
+    padding: 50px;
+}
+
+/* Image on right */
+.image-slider {
+    width: 50%;
+    aspect-ratio: 1 / 1.4;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Text on left */
+.text {
+    display: flex;
+    width: 50%;
+    color: #f2f2f2;
+    font-size: 1.1rem;
+    padding: 1rem;
+    text-align: left;
+    align-items: center; /* Vertically centers text */
+    justify-content: center; /* Horizontally centers text */
+    color: #f2f2f2; /* Light gray - might blend with background */
+    background: #b4b0b0; /* Add dark background to ensure visibility */
+}
+
+img {
+    vertical-align: middle;
+}
+
+
+
+
+/* Next & previous buttons */
+/* Next & previous buttons */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px;
+    font-size: 34px;
+    color: blue;
+    font-weight: bold;
+    /*    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;*/
+    user-select: none;
+    z-index: 10;
+}
+
+/* Correct placement */
+.prev {
+    right: 5px;
+}
+
+.next {
+    left: 5px;
+}
+
+    /* Hover effect */
+    .prev:hover, .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+/* Caption text */
+
+
+/* Number text */
+.numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* The dots/bullets/indicators */
+/* Dots */
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 4px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+    .active, .dot:hover {
+        background-color: #717171;
+    }
+
+/* Fading animation */
+.fade {
+    animation-name: fade;
+    animation-duration: 6s;
+}
+
+@keyframes fade {
+    from {
+        opacity: .4
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+    .prev, .next, .text {
+        font-size: 11px
+    }
+}

@@ -1,0 +1,62 @@
+﻿@model Rexplor.Models.MainPageVoice
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="@Model.Name">Name:</label>
+        <input type="text" asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="@Model.Caption">Caption:</label>
+        <input type="text" asp-for="@Model.Caption" class="form-control" />
+        <span asp-validation-for="@Model.Caption" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="@Model.VoiceFile">Choose File:</label>
+        <input type="file" asp-for="@Model.VoiceFile" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Upload Voice" class="btn btn-primary" />
+    </div>
+</form>
+
+
+@* <h4>MainPageVoice</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Name" class="control-label"></label>
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Caption" class="control-label"></label>
+                <input asp-for="@Model.Caption" class="form-control" />
+                <span asp-validation-for="@Model.Caption" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.VoiceFile" class="control-label"></label>
+                <input type=file asp-for="@Model.VoiceFile" class="form-control" />
+                <span asp-validation-for="@Model.VoiceFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+ *@
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,120 @@
+﻿@model Rexplor.Models.Order
+
+@{
+    ViewData["Title"] = $"فایل‌های قابل دانلود - سفارش #{Model.OrderNumber}";
+}
+
+<div class="container py-4">
+    <!-- هدر -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-download"></i> فایل‌های قابل دانلود
+                </h5>
+                <span class="badge bg-light text-dark">
+                    سفارش شماره: @Model.OrderNumber
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill"></i>
+                <strong>پرداخت شما با موفقیت انجام شده است.</strong>
+                می‌توانید فایل‌های خریداری شده را دانلود کنید.
+            </div>
+        </div>
+    </div>
+
+    <!-- لیست فایل‌ها -->
+    <div class="row">
+        @foreach (var item in Model.OrderItems)
+        {
+            var file = item.DataFile;
+            if (file == null) continue;
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary">
+                                <i class="@file.Category?.IconClass"></i>
+                                @file.Category?.Name
+                            </span>
+                            <span class="badge bg-secondary">
+                                @GetFileSize(file.FileSize)
+                            </span>
+                        </div>
+
+                        <h5 class="card-title">@file.Title</h5>
+                        <p class="card-text text-muted small">
+                            @file.Description?.Substring(0, Math.Min(100, file.Description.Length))...
+                        </p>
+
+                        <div class="row text-center small text-muted mt-3">
+                            <div class="col-4">
+                                <i class="bi bi-eye"></i><br>
+                                @file.ViewCount بازدید
+                            </div>
+                            <div class="col-4">
+                                <i class="bi bi-download"></i><br>
+                                @file.DownloadCount دانلود
+                            </div>
+                            <div class="col-4">
+                                <i class="bi bi-star"></i><br>
+                                @file.Rating.ToString("0.0")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent">
+                        <div class="d-grid gap-2">
+                            <a asp-action="Download"
+                               asp-route-orderId="@Model.Id"
+                               asp-route-fileId="@file.Id"
+                               class="btn btn-success">
+                                <i class="bi bi-download"></i> دانلود فایل
+                                (@file.FileExtension.ToUpper())
+                            </a>
+
+                            <a asp-action="Details" asp-controller="DataFiles"
+                               asp-route-id="@file.Id"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-info-circle"></i> مشاهده جزئیات
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- عملیات -->
+    <div class="mt-4">
+        <div class="btn-group" role="group">
+            <a asp-action="MyOrders" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-right"></i> بازگشت به سفارش‌ها
+            </a>
+            <a asp-action="OrderDetails" asp-route-id="@Model.Id"
+               class="btn btn-primary">
+                <i class="bi bi-receipt"></i> مشاهده جزئیات سفارش
+            </a>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len /= 1024;
+        }
+        return $"{len:0.##} {sizes[order]}";
+    }
+}

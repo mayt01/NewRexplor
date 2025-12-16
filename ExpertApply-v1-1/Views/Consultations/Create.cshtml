@@ -1,0 +1,228 @@
+﻿@model ConsultationViewModel
+@{
+    ViewData["Title"] = "رزرو مشاوره جدید";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-calendar-plus"></i> @ViewData["Title"]
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <!-- نوع مشاوره -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Type" class="form-label"></label>
+                                <select asp-for="Type" asp-items="@ViewBag.ConsultationTypes"
+                                        class="form-select">
+                                    <option value="">انتخاب کنید</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+
+                            <!-- موضوع -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Topic" class="form-label"></label>
+                                <input asp-for="Topic" class="form-control"
+                                       placeholder="موضوع مشاوره خود را وارد کنید">
+                                <span asp-validation-for="Topic" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- توضیحات -->
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"
+                                      placeholder="شرح کامل مسئله، اهداف و انتظارات خود را بنویسید..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <small class="text-muted">حداکثر ۱۰۰۰ کاراکتر</small>
+                        </div>
+
+                        <!-- فایل‌های پیوست -->
+                        <div class="mb-4">
+                            <label asp-for="AttachmentFiles" class="form-label"></label>
+                            <input asp-for="AttachmentFiles" type="file" multiple
+                                   class="form-control" accept=".pdf,.doc,.docx,.jpg,.png">
+                            <small class="text-muted">فایل‌های PDF، Word، تصاویر (حداکثر ۵ مگابایت)</small>
+                            <span asp-validation-for="AttachmentFiles" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <!-- تاریخ جلسه -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="SessionDate" class="form-label"></label>
+                                <input asp-for="SessionDate" type="date" class="form-control">
+                                <span asp-validation-for="SessionDate" class="text-danger"></span>
+                            </div>
+
+                            <!-- ساعت جلسه -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="SessionTime" class="form-label"></label>
+                                <select asp-for="SessionTime" asp-items="@ViewBag.AvailableTimes"
+                                        class="form-select">
+                                    <option value="">ساعت را انتخاب کنید</option>
+                                </select>
+                                <span asp-validation-for="SessionTime" class="text-danger"></span>
+                            </div>
+
+                            <!-- مدت جلسه -->
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Duration" class="form-label"></label>
+                                <select asp-for="Duration" class="form-select">
+                                    <option value="30">۳۰ دقیقه</option>
+                                    <option value="60" selected>۶۰ دقیقه</option>
+                                    <option value="90">۹۰ دقیقه</option>
+                                    <option value="120">۱۲۰ دقیقه</option>
+                                    <option value="180">۱۸۰ دقیقه</option>
+                                </select>
+                                <span asp-validation-for="Duration" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- روش ارتباط -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ContactMethod" class="form-label"></label>
+                                <select asp-for="ContactMethod" asp-items="@ViewBag.ContactMethods"
+                                        class="form-select">
+                                    <option value="">انتخاب کنید</option>
+                                </select>
+                                <span asp-validation-for="ContactMethod" class="text-danger"></span>
+                            </div>
+
+                            <!-- اطلاعات ارتباط -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ContactInfo" class="form-label"></label>
+                                <input asp-for="ContactInfo" class="form-control"
+                                       placeholder="شماره تماس، لینک، آدرس و...">
+                                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                                <small class="text-muted">مثال: ۰۹۱۲۳۴۵۶۷۸۹ یا https://meet.google.com/xxx</small>
+                            </div>
+                        </div>
+
+                        <!-- ایمیل اطلاع‌رسانی -->
+                        <div class="mb-4">
+                            <label asp-for="NotificationEmail" class="form-label"></label>
+                            <input asp-for="NotificationEmail" type="email" class="form-control"
+                                   placeholder="email@example.com">
+                            <span asp-validation-for="NotificationEmail" class="text-danger"></span>
+                        </div>
+
+                        <!-- اطلاعات قیمت -->
+@*                         <div class="alert alert-info">
+                            <h6><i class="bi bi-info-circle"></i> اطلاعات هزینه:</h6>
+                            <ul class="mb-0">
+                                <li>مشاوره پژوهشی: ۵۰۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li>ویرایش طرح پژوهشی: ۴۰۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li>ویرایش مقاله: ۶۰۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li>آموزش پایتون: ۳۰۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li>آنالیز آماری: ۷۰۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li>نگارش علمی: ۴۵۰,۰۰۰ تومان به ازای هر ساعت</li>
+                                <li id="price-estimate" class="text-primary fw-bold">هزینه تخمینی: -- تومان</li>
+                            </ul>
+                        </div> *@
+
+                        <!-- دکمه‌ها -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-right"></i> بازگشت
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i> ثبت درخواست مشاوره
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // اعتبارسنجی تاریخ آینده
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('SessionDate').min = today;
+
+            // نمایش تخمین قیمت بر اساس نوع و مدت
+            function updatePriceEstimate() {
+                const typeSelect = document.getElementById('Type');
+                const durationSelect = document.getElementById('Duration');
+
+                if (!typeSelect || !durationSelect) return;
+
+                const type = typeSelect.value;
+                const duration = parseInt(durationSelect.value) || 60;
+
+                const hourlyRates = {
+                    "0": 500000, // Research
+                    "1": 400000, // ResearchProposal
+                    "2": 600000, // ArticleEditing
+                    "3": 300000, // PythonTraining
+                    "4": 700000, // StatisticalAnalysis
+                    "5": 450000, // ScientificWriting
+                    "6": 350000  // Other
+                };
+
+                if (type && duration) {
+                    const hours = duration / 60;
+                    const rate = hourlyRates[type] || 350000;
+                    const estimatedPrice = rate * hours;
+
+                    const priceElement = document.getElementById('price-estimate');
+                    if (priceElement) {
+                        priceElement.textContent = 'هزینه تخمینی: ' +
+                            estimatedPrice.toLocaleString('fa-IR') + ' تومان';
+                    }
+                } else {
+                    const priceElement = document.getElementById('price-estimate');
+                    if (priceElement) {
+                        priceElement.textContent = 'هزینه تخمینی: -- تومان';
+                    }
+                }
+            }
+
+            const typeElement = document.getElementById('Type');
+            const durationElement = document.getElementById('Duration');
+
+            if (typeElement) {
+                typeElement.addEventListener('change', updatePriceEstimate);
+            }
+            if (durationElement) {
+                durationElement.addEventListener('change', updatePriceEstimate);
+            }
+
+            // مقدار اولیه
+            updatePriceEstimate();
+
+            // اعتبارسنجی فایل‌ها
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const files = e.target.files;
+                    let totalSize = 0;
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    for (let i = 0; i < files.length; i++) {
+                        totalSize += files[i].size;
+                    }
+
+                    if (totalSize > maxSize) {
+                        alert('حجم کل فایل‌ها نباید بیشتر از ۵ مگابایت باشد.');
+                        e.target.value = '';
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Rexplor.Models.ContactUsMessage>
+
+<h2>Contact Messages</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Date Submitted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var message in Model)
+        {
+            <tr>
+                <td>@message.Id</td>
+                <td>@message.Name</td>
+                <td>@message.Email</td>
+                <td>@message.Message</td>
+                <td>@message.DateSubmitted.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,191 @@
+﻿@model Rexplor.Models.Order
+@{
+    ViewData["Title"] = "جزئیات سفارش";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+
+    <!-- اگر Model null باشد -->
+    @if (Model == null)
+    {
+        <div class="alert alert-danger">
+            <h4>خطا!</h4>
+            <p>سفارش پیدا نشد.</p>
+            <a asp-action="MyOrders" class="btn btn-primary">بازگشت به سفارش‌ها</a>
+        </div>
+        return;
+    }
+
+    <!-- هدر -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-receipt"></i> سفارش شماره: @Model.OrderNumber
+                </h5>
+                <span class="badge @(Model.IsPaid ? "bg-success" : "bg-warning")">
+                    @(Model.IsPaid ? "پرداخت شده" : "در انتظار پرداخت")
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">تاریخ سفارش:</dt>
+                        <dd class="col-sm-8">@Model.OrderDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                        @if (Model.PaymentDate.HasValue)
+                        {
+                            <dt class="col-sm-4">تاریخ پرداخت:</dt>
+                            <dd class="col-sm-8">@Model.PaymentDate.Value.ToString("yyyy/MM/dd HH:mm")</dd>
+                        }
+
+                        <dt class="col-sm-4">وضعیت:</dt>
+                        <dd class="col-sm-8">@Model.Status</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">مبلغ کل:</dt>
+                        <dd class="col-sm-8">
+                            <strong class="text-success fs-5">
+                                @Model.TotalAmount.ToString("N0") تومان
+                            </strong>
+                        </dd>
+
+                        @if (!string.IsNullOrEmpty(Model.TransactionId))
+                        {
+                            <dt class="col-sm-4">شماره تراکنش:</dt>
+                            <dd class="col-sm-8">@Model.TransactionId</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لیست فایل‌ها -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="bi bi-files"></i> فایل‌های سفارش
+                <span class="badge bg-info">@(Model.OrderItems?.Count ?? 0)</span>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            @if (Model.OrderItems != null && Model.OrderItems.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>عنوان فایل</th>
+                                <th>قیمت واحد</th>
+                                <th>تعداد</th>
+                                <th>مبلغ کل</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int counter = 1;
+                                decimal total = 0;
+                            }
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@(counter++)</td>
+                                    <td>
+                                        @if (item.DataFile != null)
+                                        {
+                                            <strong>@item.DataFile.Title</strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">فایل @item.DataFileId</span>
+                                        }
+                                    </td>
+                                    <td>@item.UnitPrice.ToString("N0") تومان</td>
+                                    <td>@item.Quantity</td>
+                                    <td class="text-success">
+                                        <strong>@((item.UnitPrice * item.Quantity).ToString("N0")) تومان</strong>
+                                    </td>
+                                    <td>
+                                        @if (Model.IsPaid && item.DataFile != null)
+                                        {
+                                            <a asp-action="Download"
+                                               asp-route-orderId="@Model.Id"
+                                               asp-route-fileId="@item.DataFileId"
+                                               class="btn btn-sm btn-success">
+                                                <i class="bi bi-download"></i> دانلود
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                                total += item.UnitPrice * item.Quantity;
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="4" class="text-end"><strong>جمع کل:</strong></td>
+                                <td colspan="2">
+                                    <strong class="text-success fs-5">
+                                        @total.ToString("N0") تومان
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    هیچ فایلی در این سفارش وجود ندارد.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- دکمه‌ها -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <a asp-action="MyOrders" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-right"></i> بازگشت به سفارش‌ها
+                </a>
+
+                @if (!Model.IsPaid)
+                {
+                    <a asp-action="Payment" asp-route-id="@Model.Id"
+                       class="btn btn-success">
+                        <i class="bi bi-credit-card"></i> پرداخت سفارش
+                    </a>
+
+                    <form asp-action="CancelOrder" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('آیا از لغو این سفارش مطمئن هستید؟')">
+                            <i class="bi bi-x-circle"></i> لغو سفارش
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-action="DownloadableFiles" asp-route-id="@Model.Id"
+                       class="btn btn-primary">
+                        <i class="bi bi-download"></i> مشاهده همه فایل‌ها
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

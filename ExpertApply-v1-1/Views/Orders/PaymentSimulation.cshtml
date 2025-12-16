@@ -1,0 +1,96 @@
+﻿@model Rexplor.Models.Order
+@using Rexplor.Models
+
+@{
+    ViewData["Title"] = "پرداخت سفارش";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">
+                        <i class="bi bi-credit-card"></i> پرداخت سفارش
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <!-- اطلاعات سفارش -->
+                    <div class="alert alert-info">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="alert-heading">
+                                    سفارش شماره: <strong>@Model.OrderNumber</strong>
+                                </h5>
+                                <p class="mb-0">تاریخ: @Model.OrderDate.ToString("yyyy/MM/dd HH:mm")</p>
+                            </div>
+                            <div class="text-end">
+                                <h3 class="text-success mb-0">
+                                    @Model.TotalAmount.ToString("N0") تومان
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- شبیه‌سازی درگاه پرداخت -->
+                    <div class="text-center py-4">
+                        <i class="bi bi-shield-check display-1 text-primary"></i>
+                        <h3 class="my-4">درگاه پرداخت امن</h3>
+                        <p class="text-muted">
+                            این صفحه برای تست سیستم پرداخت طراحی شده است.<br>
+                            در نسخه نهایی به درگاه زرین‌پال متصل خواهد شد.
+                        </p>
+                    </div>
+
+                    <!-- دکمه‌های پرداخت شبیه‌سازی شده -->
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-success h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-check-circle-fill display-4 text-success"></i>
+                                    <h5 class="card-title mt-3">پرداخت موفق</h5>
+                                    <p class="card-text">شبیه‌سازی پرداخت موفق</p>
+                                    <form asp-action="ConfirmPayment" method="post">
+                                        <input type="hidden" name="id" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-success btn-lg w-100">
+                                            <i class="bi bi-check-lg"></i> پرداخت موفق
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-danger h-100">
+                                <div class="card-body text-center">
+                                    <i class="bi bi-x-circle-fill display-4 text-danger"></i>
+                                    <h5 class="card-title mt-3">پرداخت ناموفق</h5>
+                                    <p class="card-text">شبیه‌سازی پرداخت ناموفق</p>
+                                    <a asp-action="OrderDetails" asp-route-id="@Model.Id"
+                                       class="btn btn-danger btn-lg w-100">
+                                        <i class="bi bi-x-lg"></i> انصراف از پرداخت
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- هشدار تست -->
+                    <div class="alert alert-warning mt-4">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>توجه:</strong> این صفحه فقط برای تست می‌باشد.
+                        در نسخه واقعی، کاربر به درگاه بانکی هدایت می‌شود.
+                    </div>
+                </div>
+
+                <div class="card-footer text-center">
+                    <a asp-action="OrderDetails" asp-route-id="@Model.Id"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-right"></i> بازگشت به جزئیات سفارش
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

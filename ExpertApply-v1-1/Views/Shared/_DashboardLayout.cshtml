@@ -1,0 +1,190 @@
+﻿<!-- Views/Shared/_DashboardLayout.cshtml -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>داشبورد - @ViewData["Title"]</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 250px;
+            background: linear-gradient(180deg, #2c3e50, #3498db);
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+            .sidebar .nav-link {
+                color: rgba(255,255,255,.8);
+                padding: 12px 20px;
+                border-right: 3px solid transparent;
+                transition: all 0.3s;
+            }
+
+                .sidebar .nav-link:hover {
+                    color: white;
+                    background: rgba(255,255,255,.1);
+                    border-right-color: #f39c12;
+                }
+
+                .sidebar .nav-link.active {
+                    color: white;
+                    background: rgba(255,255,255,.2);
+                    border-right-color: #f39c12;
+                }
+
+        .main-content {
+            margin-right: 250px;
+            padding: 20px;
+        }
+
+        .navbar-dashboard {
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+            padding: 10px 20px;
+        }
+
+        <style >
+        @@media (max-width: 768px) {
+            .sidebar
+        {
+            width: 100%;
+            position: static;
+            height: auto;
+        }
+        }
+    </style>
+
+        .main-content {
+            margin-right: 0;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <!-- سایدبار -->
+    <div class="sidebar d-none d-md-block">
+        <div class="text-center mb-4">
+            <h4 class="text-white">
+                <i class="bi bi-speedometer2"></i>
+                مدیریت فروشگاه
+            </h4>
+            <small class="text-white-50">پنل مدیریت فایل‌های پژوهشی</small>
+        </div>
+
+        <nav class="nav flex-column">
+            <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+               asp-controller="Dashboard" asp-action="Index">
+                <i class="bi bi-speedometer2"></i> داشبورد
+            </a>
+
+            <a class="nav-link" asp-controller="DataFiles" asp-action="Index">
+                <i class="bi bi-files"></i> فایل‌ها
+            </a>
+
+            <a class="nav-link" asp-controller="DataFiles" asp-action="Create">
+                <i class="bi bi-cloud-upload"></i> آپلود فایل
+            </a>
+
+            <a class="nav-link" asp-controller="Categories" asp-action="Index">
+                <i class="bi bi-tags"></i> دسته‌بندی‌ها
+            </a>
+
+            <a class="nav-link" asp-controller="Dashboard" asp-action="FilesReport">
+                <i class="bi bi-bar-chart"></i> گزارش فایل‌ها
+            </a>
+
+            <a class="nav-link" asp-controller="Dashboard" asp-action="FinancialReport">
+                <i class="bi bi-cash-coin"></i> گزارش مالی
+            </a>
+
+            <div class="mt-4 pt-3 border-top border-white-50">
+                <a class="nav-link" href="/">
+                    <i class="bi bi-house"></i> بازگشت به سایت
+                </a>
+
+                <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="bi bi-person-circle"></i> پروفایل کاربری
+                </a>
+
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                    <button type="submit" class="nav-link btn btn-link text-start w-100">
+                        <i class="bi bi-box-arrow-right"></i> خروج از سیستم
+                    </button>
+                </form>
+            </div>
+        </nav>
+    </div>
+
+    <!-- محتوای اصلی -->
+    <div class="main-content">
+        <!-- نوبار بالا -->
+        <nav class="navbar-dashboard d-flex justify-content-between align-items-center mb-4">
+            <button class="btn btn-outline-primary d-md-none" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mobileSidebar">
+                <i class="bi bi-list"></i> منو
+            </button>
+
+            <div>
+                <h5 class="mb-0">@ViewData["Title"]</h5>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <span class="text-muted me-3">
+                    <i class="bi bi-calendar"></i> @DateTime.Now.ToString("yyyy/MM/dd")
+                </span>
+                <a href="/" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-eye"></i> مشاهده سایت
+                </a>
+            </div>
+        </nav>
+
+        <!-- سایدبار موبایل -->
+        <div class="collapse d-md-none mb-4" id="mobileSidebar">
+            <div class="card">
+                <div class="card-body">
+                    <div class="nav flex-column">
+                        <!-- لینک‌های مشابه سایدبار -->
+                        <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-speedometer2"></i> داشبورد
+                        </a>
+                        <!-- بقیه لینک‌ها -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوای صفحه -->
+        <main>
+            @RenderBody()
+        </main>
+
+        <!-- فوتر -->
+        <footer class="mt-5 pt-3 border-top text-muted text-center">
+            <small>
+                &copy; @DateTime.Now.Year - فروشگاه فایل‌های پژوهشی
+                | نسخه 1.0.0
+            </small>
+        </footer>
+    </div>
+
+    <!-- اسکریپت‌ها -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

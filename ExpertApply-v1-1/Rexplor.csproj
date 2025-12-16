@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-ExpertApply_v1_1-78e41334-663b-40c0-b426-65e085f6414e</UserSecretsId>
+    <RootNamespace>ExpertApply_v1_1</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="6.2.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>-->
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
+    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.11" />-->
+    <PackageReference Include="OpenAI" Version="2.7.0" />
+    <PackageReference Include="RestSharp" Version="113.0.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.1" />
+    <PackageReference Include="Zarinpal" Version="3.0.1" />
+    <PackageReference Include="Zarinpal.AspNetCore" Version="3.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\files\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ServiceModel.Http" Version="8.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="8.*" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="8.*" />
+  </ItemGroup>
+</Project>

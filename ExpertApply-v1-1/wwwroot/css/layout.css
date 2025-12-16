@@ -1,0 +1,496 @@
+﻿/* ============================================
+   فایل استایل‌های Layout - Rexplor
+   تاریخ ایجاد: 2024
+   نویسنده: Rexplor Team
+============================================ */
+
+/* تعریف متغیرهای CSS */
+:root {
+    --primary-color: #034799;
+    --secondary-color: #FFD300;
+    --accent-color: #0d6efd;
+    --dark-color: #1a1a1a;
+    --light-color: #f8f9fa;
+}
+
+/* ========== انیمیشن‌ها ========== */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ========== تنظیمات عمومی فونت ========== */
+/* فونت Vazir باید در head لود شده باشد */
+
+/* اعمال فونت Vazir به کل صفحه */
+body,
+html,
+h1, h2, h3, h4, h5, h6,
+p, span, div,
+a, button, label, li, ul, ol,
+th, td, table,
+.nav-link,
+.dropdown-menu, .dropdown-item,
+.card, .card-title, .card-text,
+.alert, .badge, .modal, .tooltip {
+    font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* فرم کنترل‌ها */
+.form-control, .form-select, textarea {
+    font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    text-align: right;
+}
+
+/* آیکون‌های Bootstrap */
+.bi::before,
+i[class^="bi-"],
+i[class*=" bi-"] {
+    font-family: 'bootstrap-icons' !important;
+    direction: ltr !important;
+    display: inline-block;
+}
+
+/* بهبود خوانایی برای فونت فارسی */
+body {
+    text-align: right;
+    line-height: 1.8;
+    font-weight: 300;
+    direction: rtl;
+}
+
+/* بهبود تیترها */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+/* بهبود فاصله‌گذاری */
+p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+/* بهبود جداول */
+table {
+    direction: rtl;
+}
+
+th {
+    font-weight: 500;
+}
+
+/* بهبود لیست‌ها */
+ul, ol {
+    padding-right: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* برای عناصر انگلیسی */
+.english-font,
+code, pre, kbd, samp,
+.font-mono,
+input[type="email"],
+input[type="url"],
+input[type="number"] {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    direction: ltr;
+    text-align: left;
+}
+
+/* inputهای ایمیل و URL */
+input[type="email"],
+input[type="url"],
+input[type="tel"] {
+    direction: ltr;
+    text-align: left;
+}
+
+/* کدها */
+code, pre, kbd {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Courier New', monospace !important;
+}
+
+/* ========== استایل‌های هدر ========== */
+#main-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0a2d5e 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+    #main-header.visible-header {
+        transform: translateY(0);
+    }
+
+    #main-header.hidden-header {
+        transform: translateY(-100%);
+    }
+
+/* لوگو */
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--secondary-color) !important;
+    text-shadow: 2px 2px 4px rgba(3, 71, 153, 0.5);
+    transition: all 0.3s ease;
+}
+
+    .navbar-brand:hover {
+        color: #fff !important;
+        transform: scale(1.05);
+    }
+
+/* لینک‌های ناوبری */
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.2rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+    .nav-link:hover {
+        color: var(--secondary-color) !important;
+        background: rgba(255, 211, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .nav-link.active {
+        color: var(--secondary-color) !important;
+        background: rgba(255, 211, 0, 0.15);
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 1rem;
+        left: 1rem;
+        height: 2px;
+        background: var(--secondary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        transform: scaleX(1);
+    }
+
+    /* آیکون در ناوبری */
+    .nav-link i.bi {
+        margin-left: 0.5rem;
+        font-size: 1.1em;
+        vertical-align: middle;
+    }
+
+/* دکمه‌های دارای آیکون */
+.btn i.bi {
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+/* ========== منوهای کشویی ========== */
+.dropdown-menu {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+    margin-top: 10px;
+    min-width: 220px;
+    animation: fadeInDown 0.3s ease;
+}
+
+.dropdown-item {
+    color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border-right: 3px solid transparent;
+    direction: rtl;
+    text-align: right;
+}
+
+    .dropdown-item:hover {
+        background: linear-gradient(90deg, rgba(3, 71, 153, 0.1) 0%, rgba(255, 211, 0, 0.05) 100%);
+        color: var(--primary-color);
+        border-right: 3px solid var(--secondary-color);
+        transform: translateX(-5px);
+    }
+
+    .dropdown-item i {
+        color: var(--secondary-color);
+        margin-left: 8px;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Dropdown items با Flexbox */
+    .dropdown-item.d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .dropdown-item.d-flex .item-text {
+            flex: 1;
+            text-align: right;
+            margin-left: 0.5rem;
+        }
+
+        .dropdown-item.d-flex .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .dropdown-item.d-flex:not(:has(.badge)) .item-text {
+            margin-left: 0;
+        }
+
+        .dropdown-item.d-flex:hover .item-text {
+            transform: translateX(-3px);
+            transition: transform 0.2s ease;
+        }
+
+.dropdown-divider {
+    border-color: rgba(3, 71, 153, 0.1);
+    margin: 0.5rem 1.5rem;
+}
+
+.dropdown-toggle::after {
+    margin-right: 5px;
+    vertical-align: 0.15em;
+    border-top: 0.3em solid var(--secondary-color);
+}
+
+/* ========== سبد خرید ========== */
+#cart-count {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    animation: pulse 2s infinite;
+}
+
+/* ========== دکمه هامبورگر ========== */
+.navbar-toggler {
+    border: 2px solid var(--secondary-color);
+    padding: 0.25rem 0.5rem;
+}
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.25rem rgba(255, 211, 0, 0.25);
+    }
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 211, 0, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ========== ریسپانسیو ========== */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #0a2d5e 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .dropdown-menu {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        margin: 0.5rem 0;
+        padding: 0;
+    }
+
+    .dropdown-item {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+        .dropdown-item:hover {
+            background: rgba(255, 211, 0, 0.2);
+        }
+
+    .logo-img {
+        height: 35px;
+    }
+}
+
+/* کانتینر */
+.container {
+    max-width: 1400px;
+}
+
+/* انیمیشن برای آیتم‌های منو */
+.nav-item {
+    animation: slideInRight 0.5s ease forwards;
+    opacity: 0;
+}
+
+    .nav-item:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .nav-item:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .nav-item:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .nav-item:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    .nav-item:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    .nav-item:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
+    .nav-item:nth-child(7) {
+        animation-delay: 0.7s;
+    }
+
+/* ========== استایل‌های فوتر ========== */
+.footercontainer {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0a2d5e 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.contact-icon {
+    margin-left: 0.5rem;
+    filter: invert(1) brightness(2);
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+}
+
+    .social-link:hover {
+        color: var(--secondary-color);
+    }
+
+    .social-link img {
+        margin-left: 0.5rem;
+    }
+
+/* ===== تنظیمات کلی هدر ===== */
+body {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+#main-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    background: linear-gradient(135deg, #034799 0%, #0a2d5e 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/* حذف فاصله اضافی */
+.navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+}
+
+/* تنظیمات main برای جبران هدر ثابت */
+main.container {
+    padding-top: 80px; /* ارتفاع هدر */
+    min-height: calc(100vh - 200px); /* ارتفاع کل منهای هدر و فوتر */
+}
+
+/* برای موبایل */
+@media (max-width: 992px) {
+    main.container {
+        padding-top: 70px;
+    }
+
+    #main-header {
+        position: relative;
+    }
+}
+
+/* هدر در حالت اسکرول */
+.hidden-header {
+    transform: translateY(-100%);
+}
+
+.visible-header {
+    transform: translateY(0);
+}

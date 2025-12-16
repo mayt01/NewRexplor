@@ -1,0 +1,15 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<ul class="nav nav-pills flex-column" style="background-color: darkblue;">
+    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">شماره تماس</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">ایمیل</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">رمز عبور</a></li>
+    @if (hasExternalLogins)
+    {
+        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">ورود</a></li>
+    }
+@*     <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">تایید دومرحله‌ای</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">داده شخصی</a></li> *@
+</ul>

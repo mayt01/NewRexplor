@@ -1,0 +1,261 @@
+﻿<!-- در Views/DataFiles/Index.cshtml تغییر کن: -->
+@model IEnumerable<DataFile>
+@using System.Security.Claims
+
+
+@{
+    ViewData["Title"] = "فایل‌های داده‌ای";
+}
+
+<div class="container py-4">
+    <!-- هدر -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="display-6">
+                <i class="bi bi-file-earmark-excel text-primary"></i>
+                @ViewData["Title"]
+            </h1>
+            
+            @if (ViewBag.CategoryName != null)
+            {
+                <div class="alert alert-info mt-2">
+                    <i class="bi bi-tag"></i> 
+                    نمایش فایل‌های دسته‌بندی: <strong>@ViewBag.CategoryName</strong>
+                </div>
+            }
+        </div>
+        <div class="col-md-4 text-left">
+            @if (User.Identity.IsAuthenticated &&
+            User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
+            {
+                <a asp-action="Create" class="btn btn-success">
+                    <i class="bi bi-cloud-upload"></i> آپلود فایل جدید
+                </a>
+            }
+        </div>
+    </div>
+    
+    <!-- فیلترهای جستجو -->
+    <partial name="_SearchFilters" />
+    
+    <!-- اطلاعات صفحه‌بندی -->
+    @if (ViewBag.TotalItems != null && ViewBag.TotalItems > 0)
+    {
+        <div class="alert alert-light mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-info-circle"></i>
+                    نمایش <strong>@ViewBag.TotalItems</strong> فایل
+                    @if (ViewBag.CurrentPage > 1 || ViewBag.TotalPages > 1)
+                    {
+                        <span> - صفحه <strong>@ViewBag.CurrentPage</strong> از <strong>@ViewBag.TotalPages</strong></span>
+                    }
+                </div>
+                
+                <!-- صفحه‌بندی -->
+                @if (ViewBag.TotalPages > 1)
+                {
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                    <a class="page-link" 
+                                       href="@Url.Action("Search", new { 
+                                           query = ViewBag.SearchQuery,
+                                           categoryId = ViewBag.CategoryId,
+                                           minPrice = ViewBag.MinPrice,
+                                           maxPrice = ViewBag.MaxPrice,
+                                           sortBy = ViewBag.SortBy,
+                                           page = i 
+                                       })">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+        </div>
+    }
+    
+    <!-- لیست فایل‌ها -->
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var file in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body">
+
+                            <!-- نمایش کد یکتا در بالای کارت -->
+    <div class="d-flex justify-content-between align-items-start mb-2">
+        <span class="badge bg-info text-dark">
+            <i class="bi bi-hash"></i>
+            @file.UniqueCode
+        </span>
+        <span class="badge bg-light text-dark">
+            <i class="@file.Category?.IconClass"></i>
+            @file.Category?.Name
+        </span>
+    </div>
+
+
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <span class="badge bg-light text-dark">
+                                    <i class="@file.Category?.IconClass"></i>
+                                    @file.Category?.Name
+                                </span>
+                                <span class="badge bg-success">
+                                    @file.Price.ToString("N0") تومان
+                                </span>
+                            </div>
+                            
+                            <h5 class="card-title">@file.Title</h5>
+                            <p class="card-text text-muted small">
+                                @file.Description.Substring(0, Math.Min(150, file.Description.Length))...
+                            </p>
+                            
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between text-muted small mb-2">
+                                    <span>
+                                        <i class="bi bi-eye"></i> @file.ViewCount
+                                    </span>
+                                    <span>
+                                        <i class="bi bi-download"></i> @file.DownloadCount
+                                    </span>
+                                    <span>
+                                        <i class="bi bi-star"></i> @file.Rating.ToString("0.0")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent border-top-0">
+                            <div class="btn-group w-100" role="group">
+                                <a asp-action="Details" asp-route-id="@file.Id" 
+                                   class="btn btn-primary">
+                                    <i class="bi bi-info-circle" style="font-weight: bold"></i> جزئیات
+                                </a>
+                                
+                                @if (User.Identity.IsAuthenticated &&
+            User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@file.Id" 
+                                       class="btn btn-primary" style="background-color: darkslategray">
+                                        <i class="bi bi-info-circle" style="font-weight: bold">ویرایش</i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@file.Id" 
+                                       class="btn btn-primary" style="background-color: red">
+                                        <i class="bi bi-info-circle" style="font-weight: bold">حذف</i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        <!-- صفحه‌بندی پایین -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @if (ViewBag.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" 
+                               href="@Url.Action("Search", new { 
+                                   query = ViewBag.SearchQuery,
+                                   categoryId = ViewBag.CategoryId,
+                                   minPrice = ViewBag.MinPrice,
+                                   maxPrice = ViewBag.MaxPrice,
+                                   sortBy = ViewBag.SortBy,
+                                   page = ViewBag.CurrentPage - 1 
+                               })">
+                                <i class="bi bi-chevron-right"></i> قبلی
+                            </a>
+                        </li>
+                    }
+                    
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        if (i == 1 || i == ViewBag.TotalPages || 
+                            (i >= ViewBag.CurrentPage - 2 && i <= ViewBag.CurrentPage + 2))
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" 
+                                   href="@Url.Action("Search", new { 
+                                       query = ViewBag.SearchQuery,
+                                       categoryId = ViewBag.CategoryId,
+                                       minPrice = ViewBag.MinPrice,
+                                       maxPrice = ViewBag.MaxPrice,
+                                       sortBy = ViewBag.SortBy,
+                                       page = i 
+                                   })">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                        else if (i == ViewBag.CurrentPage - 3 || i == ViewBag.CurrentPage + 3)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+                    
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" 
+                               href="@Url.Action("Search", new { 
+                                   query = ViewBag.SearchQuery,
+                                   categoryId = ViewBag.CategoryId,
+                                   minPrice = ViewBag.MinPrice,
+                                   maxPrice = ViewBag.MaxPrice,
+                                   sortBy = ViewBag.SortBy,
+                                   page = ViewBag.CurrentPage + 1 
+                               })">
+                                بعدی <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-file-earmark-excel display-1 text-muted"></i>
+            <h4 class="mt-3">فایلی یافت نشد</h4>
+            
+            @if (!string.IsNullOrEmpty(ViewBag.SearchQuery) || ViewBag.CategoryId != null)
+            {
+                <p class="text-muted mb-4">
+                    هیچ فایلی با فیلترهای انتخاب شده مطابقت ندارد.
+                </p>
+                <a asp-action="Index" class="btn btn-primary">
+                    مشاهده همه فایل‌ها
+                </a>
+            }
+            else
+            {
+                <p class="text-muted mb-4">هنوز فایلی آپلود نشده است.</p>
+                @if (User.Identity.IsAuthenticated &&
+            User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
+                {
+                    <a asp-action="Create" class="btn btn-primary">
+                        اولین فایل را آپلود کنید
+                    </a>
+                }
+            }
+        </div>
+    }
+</div>
+
+
