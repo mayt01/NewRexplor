@@ -288,7 +288,7 @@
     </footer> *@
 
     <!-- فوتر -->
-    <footer class="footercontainer">
+    @* <footer class="footercontainer">
         <div class="container">
             <div class="row">
                 <!-- ستون 1: اطلاعات تماس -->
@@ -340,10 +340,6 @@
                             <img src="icons/Telegram.png" alt="تلگرام">
                             تلگرام
                         </a>
-@*                         <a href="https://linkedin.com" class="social-link">
-                            <img src="icons/linkedin.png" alt="لینکدین">
-                            لینکدین
-                        </a> *@
                     </div>
                 </div>
 
@@ -367,7 +363,101 @@
                 </p>
             </div>
         </div>
+    </footer> *@
+    <footer class="footercontainer">
+        <div class="container">
+            <div class="row">
+                <!-- ستون 1: لوگو و اطلاعات تماس -->
+                <div class="col-lg-4 col-md-6 mb-4">
+@*                     <div class="mb-3">
+                        <img src="/logo-R.png" alt="لوگو Rexplor" width="60" height="90" class="footer-main-logo">
+                        <div class="footer-logo-text">
+                            <h4>Rexplor</h4>
+                            <small>Research & Explore</small>
+                        </div>
+                    </div> *@
+                    <div class="contact-info">
+                        <h5>تماس با ما</h5>
+                        <p class="contact-item">
+                            <img src="icons/location1.png" alt="آدرس" width="20" height="20" class="contact-icon"">
+                            <span>آدرس: تهران، خیابان آزادی، کوچه قدیر، پلاک 7</span>
+                        </p>
+                        <p class="contact-item">
+                            <img src="icons/phone.png" alt="تلفن" width="20" height="20" class="contact-icon">
+                            تلفن: <a href="tel:02182805413">021-82805413</a>
+                        </p>
+                        <p class="contact-item">
+                            <img src="icons/mail3.png" alt="ایمیل" width="20" height="20" class="contact-icon">
+                            ایمیل: <a href="mailto:info@rexplor.ir">info@rexplor.ir</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ستون 2: لینک‌های سریع -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>دسترسی سریع</h5>
+                    <ul class="quick-links">
+                        <li><a href="/"><i class="bi bi-house"></i> صفحه اصلی</a></li>
+                        <li><a href="#services"><i class="bi bi-gear"></i> خدمات</a></li>
+                        <li><a href="#about"><i class="bi bi-info-circle"></i> درباره ما</a></li>
+                        <li><a href="#faq"><i class="bi bi-question-circle"></i> سوالات متداول</a></li>
+                        <li><a href="#contact"><i class="bi bi-telephone"></i> تماس با ما</a></li>
+                    </ul>
+                </div>
+
+                <!-- ستون 3: شبکه‌های اجتماعی -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>شبکه‌های اجتماعی</h5>
+                    <div class="social-links">
+                        <a href="https://instagram.com/eee" class="social-link">
+                            <img src="icons/Instagram.png" alt="اینستاگرام">
+                            <span class="social-text">اینستاگرام</span>
+                        </a>
+                        <a href="https://t.me/eee" class="social-link">
+                            <img src="icons/Telegram.png" alt="تلگرام">
+                            <span class="social-text">تلگرام</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ستون 4: نمادهای اعتماد -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>مجوزها و نمادهای اعتماد</h5>
+                    <div class="trust-badges">
+                        <!-- نماد اتحادیه کشوری کسب و کارهای مجازی -->
+                        <div class="trust-badge union-badge">
+                            <h6>اتحادیه کسب و کارهای مجازی</h6>
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjM2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KCTxwYXRoIGQ9Im0xMjAgMjQzbDk0LTU0IDAtMTA5IC05NCA1NCAwIDEwOSAwIDB6IiBmaWxsPSIjODA4Mjg1Ii8+Cgk8cGF0aCBkPSJtMTIwIDI1NGwtMTAzLTYwIDAtMTE5IDEwMy02MCAxMDMgNjAgMCAxMTkgLTEwMyA2MHoiIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDo1O3N0cm9rZTojMDBhZWVmIi8+Cgk8cGF0aCBkPSJtMjE0IDgwbC05NC01NCAtOTQgNTQgOTQgNTQgOTQtNTR6IiBmaWxsPSIjMDBhZWVmIi8+Cgk8cGF0aCBkPSJtMjYgODBsMCAxMDkgOTQgNTQgMC0xMDkgLTk0LTU0IDAgMHoiIGZpbGw9IiM1ODU5NWIiLz4KCTxwYXRoIGQ9Im0xMjAgMTU3bDQ3LTI3IDAtMjMgLTQ3LTI3IC00NyAyNyAwIDU0IDQ3IDI3IDQ3LTI3IiBzdHlsZT0iZmlsbDpub25lO3N0cm9rZS1saW5lY2FpOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6MTU7c3Ryb2tlOiNmZmYiLz4KCTx0ZXh0IHg9IjE1IiB5PSIzMDAiIGZvbnQtc2l6ZT0iMjVweCIgZm9udC1mYW1pbHk9IidCIFlla2FuJyIgc3R5bGU9ImZpbGw6IzI5Mjk1Mjtmb250LXdlaWdodDpib2xkIj7Yudi22Ygg2KfYqtit2KfYr9uM2Ycg2qnYtNmI2LHbjDwvdGV4dD4KCTx0ZXh0IHg9IjgiIHk9IjM0MyIgZm9udC1zaXplPSIyNXB4IiBmb250LWZhbWlseT0iJ0IgWWVrYW4nIiBzdHlsZT0iZmlsbDojMjkyOTUyO2ZvbnQtd2VpZ2h0OmJvbGQiPtqp2LPYqCDZiCDaqdin2LHZh9in24wg2YXYrNin2LLbjDwvdGV4dD4KPC9zdmc+"
+                                 alt="نماد اتحادیه کشوری کسب و کارهای مجازی"
+                                 onclick="window.open('https://ecunion.ir/verify/rexplor.ir?token=22714146940f4a1df1fc', 'Popup','toolbar=no, location=no, statusbar=no, menubar=no, scrollbars=1, resizable=0, width=580, height=600, top=30')"
+                                 style="cursor:pointer;">
+                        </div>
+
+                        <!-- نماد اعتماد الکترونیک -->
+                        <div class="trust-badge enamad-badge">
+                            <h6>نماد اعتماد الکترونیک</h6>
+                            <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE'>
+                                <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE' alt='نماد اعتماد الکترونیک'>
+                            </a>
+@*                             <p class="enamad-text">کلیه خدمات این سایت دارای نماد اعتماد الکترونیک می‌باشد</p> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+@*             <div class="border-top pt-3 mt-3">
+                <p>&copy; <span id="currentYear"></span> Rexplor. تمام حقوق محفوظ است.</p>
+                <p class="text-muted mt-1" style="color: #adb5bd !important; font-size: 0.85rem;">
+                    این وبسایت تحت نظارت اتحادیه کشوری کسب و کارهای مجازی فعالیت می‌کند
+                </p>
+            </div> *@
+        </div>
     </footer>
+
+    <script>
+        // برای نمایش سال جودی در کپی رایت
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
 
     <!-- اسکریپت‌ها -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

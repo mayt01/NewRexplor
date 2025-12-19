@@ -193,30 +193,6 @@
                 </select>
             </div>
 
-            <div class="col-md-4">
-                <label for="sortBy" class="form-label">مرتب‌سازی</label>
-                <select class="form-select" id="sortBy" name="sortBy">
-                    <option value="newest" selected="@(ViewBag.SortBy == "newest")">جدیدترین</option>
-                    <option value="oldest" selected="@(ViewBag.SortBy == "oldest")">قدیمی‌ترین</option>
-                    <option value="popular" selected="@(ViewBag.SortBy == "popular")">محبوب‌ترین</option>
-                    <option value="views" selected="@(ViewBag.SortBy == "views")">پربازدیدترین</option>
-                    <option value="downloads" selected="@(ViewBag.SortBy == "downloads")">پر دانلودترین</option>
-                    <option value="rating" selected="@(ViewBag.SortBy == "rating")">برترین امتیاز</option>
-                    <option value="price-asc" selected="@(ViewBag.SortBy == "price-asc")">ارزان‌ترین</option>
-                    <option value="price-desc" selected="@(ViewBag.SortBy == "price-desc")">گران‌ترین</option>
-                    <option value="title-asc" selected="@(ViewBag.SortBy == "title-asc")">عنوان (الف-ی)</option>
-                    <option value="title-desc" selected="@(ViewBag.SortBy == "title-desc")">عنوان (ی-الف)</option>
-                </select>
-            </div>
-
-            <div class="col-md-4">
-                <label for="isActive" class="form-label">وضعیت فایل</label>
-                <select class="form-select" id="isActive" name="isActive">
-                    <option value="">همه وضعیت‌ها</option>
-                    <option value="true" selected="@(ViewBag.IsActive == true)">فقط فعال</option>
-                    <option value="false" selected="@(ViewBag.IsActive == false)">فقط غیرفعال</option>
-                </select>
-            </div>
 
             <!-- ردیف سوم: بازه قیمت -->
             <div class="col-md-6">
