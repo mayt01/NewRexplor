@@ -115,7 +115,7 @@ namespace Rexplor.Controllers
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _environment;
         //private readonly ZarinPalService _zarinPalService;
         private readonly IZarinPalService _zarinPalService;
@@ -123,7 +123,7 @@ namespace Rexplor.Controllers
 
         public OrdersController(
             ApplicationDbContext context,
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IWebHostEnvironment environment,
             IZarinPalService zarinPalService)
         {

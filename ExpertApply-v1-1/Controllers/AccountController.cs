@@ -9,11 +9,11 @@ namespace Rexplor.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, IEmailSender emailSender, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, IEmailSender emailSender, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -32,7 +32,7 @@ namespace Rexplor.Controllers
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError("", "این ایمیل قبلاً ثبت شده است");
+                    ModelState.AddModelError("", "این ایمیل قبلاً ثبت شده است. لطفا ایمیل دیگری وارد نمایید.");
                     return View(model);
                 }
 
@@ -90,19 +90,22 @@ namespace Rexplor.Controllers
             var email = HttpContext.Session.GetString("Email");
             if (email == null) return RedirectToAction("Step1");
 
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = email,
                 Email = email,
                 EmailConfirmed = true,
-                PhoneNumber = model.PhoneNumber
+                PhoneNumber = model.PhoneNumber,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Credit = 0
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                await _userManager.AddClaimAsync(user, new Claim("FullName", model.FullName));
+                //await _userManager.AddClaimAsync(user, new Claim("FullName", model.FullName));
 
                 // ورود خودکار کاربر
                 await _signInManager.SignInAsync(user, isPersistent: false);

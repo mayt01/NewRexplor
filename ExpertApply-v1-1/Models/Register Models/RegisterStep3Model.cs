@@ -4,9 +4,17 @@ namespace Rexplor.Models
 {
     public class RegisterStep3Model
     {
-        [Required(ErrorMessage = "نام کامل الزامی است")]
-        [Display(Name = "نام کامل")]
-        public string FullName { get; set; }
+        //[Required(ErrorMessage = "نام کامل الزامی است")]
+        //[Display(Name = "نام کامل")]
+        //public string FullName { get; set; }
+
+        [Required(ErrorMessage = "نام الزامی است")]
+        [Display(Name = "نام")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "نام خانوادگی الزامی است")]
+        [Display(Name = "نام خانوادگی")]
+        public string LastName { get; set; }
 
         [Required(ErrorMessage = "شماره موبایل الزامی است")]
         [Phone(ErrorMessage = "شماره موبایل معتبر وارد کنید")]

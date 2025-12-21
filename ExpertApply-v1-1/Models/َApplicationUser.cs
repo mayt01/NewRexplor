@@ -20,6 +20,8 @@ namespace Rexplor.Models
         [Display(Name = "عکس پروفایل")]
         public string? ProfilePicture { get; set; }
 
+        public int? Credit { get; set; }
+
         [Display(Name = "تاریخ ثبت نام")]
         public DateTime RegistrationDate { get; set; } = DateTime.Now;
 

@@ -23,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // --- Identity ---
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     // ✅ اصلاح ۲: RequireConfirmedAccount = false برای توسعه
     options.SignIn.RequireConfirmedAccount = false;
@@ -41,6 +41,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 //builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 //{

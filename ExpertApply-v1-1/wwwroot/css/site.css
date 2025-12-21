@@ -363,13 +363,14 @@ header .nav-link {
 .alert {
     position: fixed;
     color: forestgreen;
-    top: 80px;
+    top: 110px;
     right: 10px;
+    left: 20px;
+    right: 20px;
     padding: 0;
-    width: 1400px;
+/*    width: 1400px;*/
     z-index: 1050;
     text-align: center;
-    background-color: transparent;
     border: 1px solid #ccc; /* Optional border color */
 }
 

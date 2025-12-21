@@ -1,15 +1,38 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    // گرفتن کاربر فعلی
+    var user = await UserManager.GetUserAsync(User);
+    var displayName = "کاربر";
+    
+    if (user != null)
+    {
+        if (!string.IsNullOrEmpty(user.FirstName) && !string.IsNullOrEmpty(user.LastName))
+        {
+            displayName = $"پروفایل {user.FirstName} {user.LastName}";
+        }
+        else if (!string.IsNullOrEmpty(user.UserName))
+        {
+            displayName = $"پروفایل";
+        }
+    }
+}
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
 @*         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a> *@
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">پروفایل</a> 
+            @* <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">پروفایل</a>  *@
             @* <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Profile" title="Manage">حساب کاربری</a> *@
             @* <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile">حساب کاربری</a> *@
+
+            @* <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> *@
+            <a class="nav-link text-dark" asp-area="UserDashboard" asp-page="/Profile" title="Manage">
+                @displayName
+            </a>
     </li>
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

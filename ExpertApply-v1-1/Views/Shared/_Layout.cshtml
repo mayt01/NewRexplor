@@ -117,28 +117,16 @@
                                         <span class="badge bg-danger">به زودی</span>
                                     </a>
                                 </li>
-@*                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-center text-primary" asp-controller="DataFiles" asp-action="Index">
-                                        <i class="bi bi-shop"></i> مشاهده فروشگاه
-                                    </a>
-                                </li> *@
                             </ul>
                         </li>
 
-                        <!-- فایل‌ها -->
-@*                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="DataFiles" asp-action="Index">
-                                <i class="bi bi-files"></i> فایل‌ها
-                            </a>
-                        </li> *@
 
                         <!-- سوالات متداول -->
-                        <li class="nav-item">
+@*                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="faq">
                                 <i class="bi bi-question-circle"></i> سوالات متداول
                             </a>
-                        </li>
+                        </li> *@
 
                         <!-- درباره ما -->
                         <li class="nav-item">
@@ -163,19 +151,6 @@
                                     <i class="bi bi-speedometer2"></i> داشبورد
                                 </a>
                             </li>
-
-@*                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Consultations" asp-action="Index">
-                                    <i class="bi bi-calendar-check"></i> مشاوره‌های من
-                                    @if (ViewBag.PendingConsultations > 0)
-                                    {
-                                        <span class="badge bg-warning" style="font-size: 0.6rem; position: absolute; top: -5px; right: -5px;">
-                                            @ViewBag.PendingConsultations
-                                        </span>
-                                    }
-                                </a>
-                            </li> *@
-
 
                             <!-- سفارش‌ها -->
                             <li class="nav-item">
@@ -406,7 +381,7 @@
                 </div>
 
                 <!-- ستون 3: شبکه‌های اجتماعی -->
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-2 col-md-6 mb-4">
                     <h5>شبکه‌های اجتماعی</h5>
                     <div class="social-links">
                         <a href="https://instagram.com/eee" class="social-link">
@@ -421,7 +396,7 @@
                 </div>
 
                 <!-- ستون 4: نمادهای اعتماد -->
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-4 col-md-6 mb-4">
                     <h5>مجوزها و نمادهای اعتماد</h5>
                     <div class="trust-badges">
                         <!-- نماد اتحادیه کشوری کسب و کارهای مجازی -->
@@ -440,6 +415,11 @@
                                 <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=673285&Code=QsP6ILMoCPKLwfOS0mmHQzp5ffLdo0xE' alt='نماد اعتماد الکترونیک'>
                             </a>
 @*                             <p class="enamad-text">کلیه خدمات این سایت دارای نماد اعتماد الکترونیک می‌باشد</p> *@
+                        </div>
+
+                        <div class="trust-badge enamad-badge">
+                            <h6>پرداخت ایمن با زرین پال</h6>
+                            <script src="https://www.zarinpal.com/webservice/TrustCode" type="text/javascript"></script>
                         </div>
                     </div>
                 </div>
