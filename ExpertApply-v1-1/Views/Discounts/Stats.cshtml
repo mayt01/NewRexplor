@@ -1,0 +1,170 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "آمار استفاده از کدهای تخفیف";
+    var recentUsages = ViewBag.RecentUsages as List<DiscountUsage> ?? new List<DiscountUsage>();
+}
+
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">کدهای تخفیف</a></li>
+            <li class="breadcrumb-item active">آمار و گزارشات</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">
+        <i class="bi bi-graph-up text-info"></i> @ViewData["Title"]
+    </h1>
+
+    <!-- آمار کلی -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-percent display-4"></i>
+                    <h4 class="mt-2">@Model.TotalDiscounts</h4>
+                    <p class="mb-0">تعداد کل کدها</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-check-circle display-4"></i>
+                    <h4 class="mt-2">@Model.ActiveDiscounts</h4>
+                    <p class="mb-0">کدهای فعال</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock-history display-4"></i>
+                    <h4 class="mt-2">@Model.ExpiredDiscounts</h4>
+                    <p class="mb-0">کدهای منقضی</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-coin display-4"></i>
+                    <h4 class="mt-2">@Model.TotalDiscountAmount.ToString("N0")</h4>
+                    <p class="mb-0">تخفیف کل (تومان)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- جدول آخرین استفاده‌ها -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-clock-history"></i> آخرین استفاده‌ها
+            </h5>
+        </div>
+        <div class="card-body">
+            @if (recentUsages.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>تاریخ</th>
+                                <th>کاربر</th>
+                                <th>کد تخفیف</th>
+                                <th>فایل</th>
+                                <th class="text-end">مبلغ تخفیف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var usage in recentUsages)
+                            {
+                                <tr>
+                                    <td>@usage.UsedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                                    <td>
+                                        @usage.User?.Email
+                                        <br>
+                                        <small class="text-muted">@usage.User?.UserName</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@usage.Discount?.Code</span>
+                                        <br>
+                                        <small>@usage.Discount?.DiscountPercent%</small>
+                                    </td>
+                                    <td>
+                                        @usage.File?.Title
+                                        <br>
+                                        <small class="text-muted">@usage.File?.UniqueCode</small>
+                                    </td>
+                                    <td class="text-end text-success fw-bold">
+                                        @usage.DiscountAmount.ToString("N0") تومان
+                                        <br>
+                                        <small class="text-muted">
+                                            از @usage.OriginalAmount.ToString("N0")
+                                        </small>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <i class="bi bi-percent display-1 text-muted mb-3"></i>
+                    <h4 class="text-muted">هنوز کد تخفیفی استفاده نشده است</h4>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- اطلاعات اضافی -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">پیشنهادات</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            کدهای تخفیف با اعتبار کوتاه‌مدت (3-7 روز) ایجاد کنید
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            برای رویدادهای خاص کدهای ویژه ایجاد کنید
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            کدهای تخفیف دانشجویی با اعتبار طولانی‌تر
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">دسترسی سریع</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> ایجاد کد تخفیف جدید
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-list-ul"></i> مشاهده لیست کدها
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

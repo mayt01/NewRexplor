@@ -183,6 +183,50 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- بخش کد تخفیف -->
+            <div class="card shadow-sm mb-4 discount-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-percent"></i> استفاده از کد تخفیف
+                    </h5>
+                    <div class="input-group mb-2">
+                        <input type="text"
+                               class="form-control discount-input"
+                               id="discountCodeInput"
+                               placeholder="کد تخفیف را وارد کنید"
+                               aria-label="کد تخفیف">
+                        <button class="btn btn-outline-primary"
+                                type="button"
+                                id="applyDiscountBtn">
+                            اعمال
+                        </button>
+                    </div>
+                    <div id="discountMessage" class="small"></div>
+
+                    <!-- نمایش قیمت نهایی -->
+                    <div id="finalPriceSection" class="mt-3 d-none">
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>قیمت اصلی:</span>
+                            <span class="text-muted text-decoration-line-through">
+                                @Model.Price.ToString("N0") تومان
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>تخفیف:</span>
+                            <span class="text-success" id="discountAmount">0 تومان</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>قیمت نهایی:</span>
+                            <span class="text-success final-price" id="finalPrice">
+                                @Model.Price.ToString("N0") تومان
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -239,4 +283,260 @@
         //     return $"{len:0.##} {sizes[order]}";
         // }
     }
+}
+
+
+<!-- این را اضافه کنید در بخش head یا درون style tag در body: -->
+<style>
+    .discount-card {
+        border-left: 4px solid #28a745;
+    }
+
+    .discount-input:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #6c757d;
+    }
+
+    .final-price {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    #applyDiscountBtn {
+        transition: all 0.3s ease;
+    }
+
+        #applyDiscountBtn:hover {
+            background-color: #28a745;
+            color: white;
+        }
+
+    .discount-applied {
+        animation: pulse 0.5s ease-in-out;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            const fileId = @Model.Id;
+            const originalPrice = @Model.Price;
+            let currentDiscount = null;
+
+            // اعمال تخفیف
+            $('#applyDiscountBtn').click(function() {
+                const discountCode = $('#discountCodeInput').val().trim();
+
+                if (!discountCode) {
+                    showMessage('لطفا کد تخفیف را وارد کنید', 'danger');
+                    return;
+                }
+
+                // نمایش لودینگ
+                const btn = $(this);
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال بررسی...');
+
+                // درخواست به API
+                $.ajax({
+                    url: '/api/discount/validate',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        code: discountCode,
+                        fileId: fileId,
+                        originalAmount: originalPrice
+                    }),
+                    success: function(response) {
+                        btn.prop('disabled', false).html('اعمال');
+
+                        if (response.isValid) {
+                            currentDiscount = response;
+
+                            // نمایش اطلاعات تخفیف
+                            $('#discountAmount').text(formatCurrency(response.discountAmount) + ' تومان');
+                            $('#finalPrice').text(formatCurrency(response.finalAmount) + ' تومان');
+                            $('#finalPriceSection').removeClass('d-none');
+
+                            // به‌روزرسانی دکمه خرید
+                            updatePurchaseButton(response.finalAmount);
+
+                            // ذخیره در فیلدهای مخفی فرم
+                            $('#hiddenDiscountCode').val(response.code);
+                            $('#hiddenFinalPrice').val(response.finalAmount);
+
+                            // ذخیره در localStorage
+                            saveDiscountToStorage(response);
+
+                            showMessage(response.message, 'success');
+
+                            // انیمیشن
+                            $('#finalPriceSection').addClass('discount-applied');
+                            setTimeout(() => {
+                                $('#finalPriceSection').removeClass('discount-applied');
+                            }, 500);
+                        } else {
+                            showMessage(response.message, 'danger');
+                            $('#finalPriceSection').addClass('d-none');
+                            resetPurchaseButton();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        btn.prop('disabled', false).html('اعمال');
+                        showMessage('خطا در اتصال به سرور. لطفا دوباره تلاش کنید.', 'danger');
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // اعمال تخفیف ذخیره شده در صورت وجود
+            applySavedDiscount();
+
+            // تغییر کد تخفیف - ریست کردن
+            $('#discountCodeInput').on('input', function() {
+                if (currentDiscount && $(this).val().trim() !== currentDiscount.code) {
+                    $('#finalPriceSection').addClass('d-none');
+                    resetPurchaseButton();
+                    currentDiscount = null;
+                    $('#hiddenDiscountCode').val('');
+                    $('#hiddenFinalPrice').val('');
+                }
+            });
+
+            // ارسال فرم خرید
+            $('#addToCartForm').submit(function(e) {
+                // اگر تخفیف اعمال شده، اطلاعات را به فرم اضافه کن
+                if (currentDiscount) {
+                    $('#hiddenDiscountCode').val(currentDiscount.code);
+                    $('#hiddenFinalPrice').val(currentDiscount.finalAmount);
+                }
+
+                // نمایش لودینگ روی دکمه
+                $('#addToCartBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال اضافه کردن...');
+            });
+
+            // تابع نمایش پیام
+            function showMessage(message, type) {
+                $('#discountMessage').html('<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>');
+
+                // حذف خودکار پیام بعد از 5 ثانیه
+                setTimeout(function() {
+                    $('.alert').alert('close');
+                }, 5000);
+            }
+
+            // تابع ذخیره تخفیف در localStorage
+            function saveDiscountToStorage(response) {
+                const discountData = {
+                    code: response.code,
+                    fileId: fileId,
+                    discountPercent: response.discountPercent,
+                    discountAmount: response.discountAmount,
+                    finalAmount: response.finalAmount,
+                    originalPrice: originalPrice,
+                    timestamp: new Date().getTime()
+                };
+
+                localStorage.setItem('discount_' + fileId, JSON.stringify(discountData));
+            }
+
+            // تابع اعمال تخفیف ذخیره شده
+            function applySavedDiscount() {
+                const discountData = localStorage.getItem('discount_' + fileId);
+
+                if (discountData) {
+                    const data = JSON.parse(discountData);
+
+                    // بررسی معتبر بودن (کمتر از 1 ساعت از ذخیره گذشته)
+                    const oneHour = 60 * 60 * 1000;
+                    const now = new Date().getTime();
+
+                    if (now - data.timestamp < oneHour) {
+                        // اعمال تخفیف
+                        $('#discountCodeInput').val(data.code);
+                        $('#discountAmount').text(formatCurrency(data.discountAmount) + ' تومان');
+                        $('#finalPrice').text(formatCurrency(data.finalAmount) + ' تومان');
+                        $('#finalPriceSection').removeClass('d-none');
+                        updatePurchaseButton(data.finalAmount);
+
+                        // ذخیره در متغیر جاری
+                        currentDiscount = {
+                            code: data.code,
+                            discountAmount: data.discountAmount,
+                            finalAmount: data.finalAmount,
+                            discountPercent: data.discountPercent
+                        };
+
+                        // ذخیره در فیلدهای مخفی
+                        $('#hiddenDiscountCode').val(data.code);
+                        $('#hiddenFinalPrice').val(data.finalAmount);
+
+                        showMessage('تخفیف قبلی اعمال شد', 'info');
+                    } else {
+                        // حذف تخفیف منقضی شده
+                        localStorage.removeItem('discount_' + fileId);
+                    }
+                }
+            }
+
+            // تابع به‌روزرسانی دکمه خرید
+            function updatePurchaseButton(finalPrice) {
+                $('#addToCartBtn').html('<i class="bi bi-cart-plus"></i> افزودن به سبد خرید (' +
+                    formatCurrency(finalPrice) + ' تومان)');
+            }
+
+            // تابع ریست کردن دکمه خرید
+            function resetPurchaseButton() {
+                $('#addToCartBtn').html('<i class="bi bi-cart-plus"></i> افزودن به سبد خرید (' +
+                    formatCurrency(originalPrice) + ' تومان)');
+            }
+
+            // تابع فرمت ارز
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('fa-IR').format(Math.round(amount));
+            }
+        });
+    </script>
+
+    <style>
+        .discount-applied {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @@keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
 }

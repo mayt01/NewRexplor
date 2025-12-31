@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-size: 14px;
     direction: rtl;
 }
@@ -410,4 +410,71 @@ header .nav-link {
 
 button{
     margin: 5px;
+}
+
+
+/* استایل‌های مربوط به تخفیف */
+.discount-badge {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.final-price {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.discount-card {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(to right, #f8fff9, #ffffff);
+}
+
+.discount-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+}
+
+/* انیمیشن‌ها */
+@@keyframes pulse-success {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
+
+.pulse-success {
+    animation: pulse-success 1s;
+}
+
+@@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
 }

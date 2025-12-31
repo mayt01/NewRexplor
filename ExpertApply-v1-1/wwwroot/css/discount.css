@@ -1,0 +1,57 @@
+﻿/* discount.css */
+.discount-card {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(to right, #f8fff9, #ffffff);
+}
+
+.discount-input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.final-price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+#applyDiscountBtn {
+    transition: all 0.3s ease;
+}
+
+    #applyDiscountBtn:hover {
+        background-color: #28a745;
+        color: white;
+    }
+
+.discount-applied {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.discount-badge {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}

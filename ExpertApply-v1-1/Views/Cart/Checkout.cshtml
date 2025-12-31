@@ -1,4 +1,4 @@
-﻿@model List<ShoppingCartItem>
+﻿@* @model List<ShoppingCartItem>
 
 @{
     ViewData["Title"] = "تکمیل خرید";
@@ -65,14 +65,6 @@
                                 پرداخت آنلاین (زرین‌پال)
                             </label>
                         </div>
-@*                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="paymentMethod"
-                                   id="manual" value="manual">
-                            <label class="form-check-label" for="manual">
-                                <i class="bi bi-bank text-primary"></i>
-                                پرداخت کارت به کارت
-                            </label>
-                        </div> *@
                     </div>
 
                     <!-- قوانین -->
@@ -81,12 +73,6 @@
                             <i class="bi bi-exclamation-triangle me-2"></i>
                             <strong>توجه:</strong> پس از پرداخت موفق، لینک‌های دانلود بلافاصله در اختیار شما قرار می‌گیرد. این لینک‌ها تنها برای شخص خریدار معتبر بوده و در صورت بروز هرگونه مشکل در فرآیند پرداخت، لطفاً با تیم پشتیبانی تماس بگیرید.
                         </p>
-@*                         <h6><i class="bi bi-exclamation-triangle"></i> قوانین و مقررات:</h6> *@
-@*                         <ul class="mb-0 small" style="font-weight: 10px;">
-                            <li>پس از پرداخت موفق، لینک دانلود فایل‌ها بلافاصله فعال می‌شود.</li>
-                            <li>فایل‌ها فقط برای شخص خریدار قابل دانلود می‌باشند.</li>
-                            <li>در صورت بروز مشکل در پرداخت، با پشتیبانی تماس بگیرید.</li>
-                        </ul> *@
                     </div>
                 </div>
             </div>
@@ -129,18 +115,262 @@
                             <i class="bi bi-arrow-left"></i> بازگشت به سبد خرید
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
 
-                    <!-- اطلاعات حساب -->
-@*                     <div class="mt-4 pt-3 border-top">
-                        <h6 class="text-muted">پرداخت کارت به کارت:</h6>
-                        <div class="bg-light p-3 rounded small">
-                            <p class="mb-1"><strong>شماره کارت:</strong> ۶۳۶۲-۱۴۱۱-۹۹۱۸-۵۰۵۷</p>
-                            <p class="mb-1"><strong>به نام:</strong> شرکت رکسپلور</p>
-                            <p class="mb-0"><strong>شماره پیگیری:</strong> پس از واریز، فیش را ارسال کنید</p>
+
+
+@model List<ShoppingCartItem>
+@{
+    ViewData["Title"] = "تکمیل خرید";
+
+    // محاسبات قیمت
+    var subtotal = Model.Sum(item => item.OriginalPrice * item.Quantity);
+    var total = Model.Sum(item => item.Price * item.Quantity);
+    var discountAmount = subtotal - total;
+    var hasDiscount = discountAmount > 0;
+
+    // اطلاعات تخفیف از ViewBag
+    var discountCode = ViewBag.DiscountCode as string;
+    var discountPercent = ViewBag.DiscountPercent as int?;
+}
+
+<div class="container py-4">
+    <h1 class="mb-4">
+        <i class="bi bi-cart-check text-primary"></i>
+        @ViewData["Title"]
+    </h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- اطلاعات خرید -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">مرحله نهایی خرید</h5>
+                </div>
+                <div class="card-body">
+                    <!-- خلاصه فایل‌ها -->
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2">فایل‌های انتخابی:</h6>
+                        <ul class="list-group">
+                            @foreach (var item in Model)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-file-earmark-excel text-primary me-2"></i>
+                                        @item.Title
+                                        <small class="text-muted">(@item.CategoryName)</small>
+                                        @if (item.Price < item.OriginalPrice)
+                                        {
+                                            <span class="badge bg-success ms-2">
+                                                <i class="bi bi-percent"></i> تخفیف
+                                            </span>
+                                        }
+                                    </div>
+                                    <div class="text-end">
+                                        @if (item.Price < item.OriginalPrice)
+                                        {
+                                            <div>
+                                                <small class="text-muted text-decoration-line-through">
+                                                    @item.OriginalPrice.ToString("N0")
+                                                </small>
+                                            </div>
+                                        }
+                                        <span class="badge bg-primary rounded-pill">
+                                            @item.Quantity × @item.Price.ToString("N0")
+                                        </span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- اطلاعات خریدار -->
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2">اطلاعات خریدار:</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">نام و نام خانوادگی</label>
+                                <input type="text" class="form-control" value="@User.Identity.Name" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">تاریخ خرید</label>
+                                <input type="text" class="form-control" value="@DateTime.Now.ToString("yyyy/MM/dd HH:mm")" readonly>
+                            </div>
                         </div>
-                    </div> *@
+                    </div>
+
+                    <!-- درگاه‌های پرداخت -->
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2 mb-3">روش پرداخت:</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                   id="zarinpal" value="zarinpal" checked>
+                            <label class="form-check-label" for="zarinpal">
+                                <i class="bi bi-credit-card text-success"></i>
+                                پرداخت آنلاین (زرین‌پال)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- قوانین -->
+                    <div class="alert alert-warning">
+                        <p class="mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>توجه:</strong> پس از پرداخت موفق، لینک‌های دانلود بلافاصله در اختیار شما قرار می‌گیرد. این لینک‌ها تنها برای شخص خریدار معتبر بوده و در صورت بروز هرگونه مشکل در فرآیند پرداخت، لطفاً با تیم پشتیبانی تماس بگیرید.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- خلاصه پرداخت -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-receipt"></i> صورت حساب
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">تعداد فایل:</span>
+                            <span>@Model.Count</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">جمع کل:</span>
+                            <span>@subtotal.ToString("N0") تومان</span>
+                        </div>
+
+                        @if (hasDiscount)
+                        {
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <span class="text-muted">تخفیف @(discountPercent)%:</span>
+                                <span>-@discountAmount.ToString("N0") تومان</span>
+                            </div>
+                        }
+
+                        <hr />
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="h5">مبلغ قابل پرداخت:</span>
+                            <span class="h4 text-success">@total.ToString("N0") تومان</span>
+                        </div>
+
+                        @if (hasDiscount)
+                        {
+                            <div class="alert alert-success mt-3">
+                                <i class="bi bi-percent"></i>
+                                <small>
+                                    کد تخفیف <strong>@discountCode</strong> با موفقیت اعمال شد.
+                                    <br>
+                                    شما <strong>@discountAmount.ToString("N0") تومان</strong> صرفه‌جویی کرده‌اید!
+                                </small>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- دکمه پرداخت -->
+                    <div class="d-grid gap-2">
+                        <form asp-action="CreateOrder" method="post" id="checkoutForm">
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label" for="agreeTerms">
+                                    با <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">قوانین و مقررات</a> موافقم
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-lg w-100" id="submitOrderBtn">
+                                <i class="bi bi-lock-fill"></i> پرداخت و نهایی کردن خرید
+                            </button>
+                        </form>
+
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> بازگشت به سبد خرید
+                        </a>
+                    </div>
+
+                    <!-- اطلاعات کاربر -->
+                    <div class="mt-4 pt-3 border-top">
+                        <h6 class="text-muted mb-3"><i class="bi bi-person-circle"></i> اطلاعات حساب:</h6>
+                        <div class="bg-light p-3 rounded small">
+                            <p class="mb-1">
+                                <strong>ایمیل:</strong>
+                                @User.Claims.FirstOrDefault(c => c.Type == "email")?.Value
+                            </p>
+                            <p class="mb-0">
+                                <strong>تعداد کل سفارشات:</strong>
+                                <span id="orderCount">...</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal قوانین -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">قوانین و مقررات</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>1. تمامی فایل‌های خریداری شده فقط برای استفاده شخصی می‌باشند.</p>
+                <p>2. پس از خرید، فایل‌ها در پنل کاربری شما قابل دانلود خواهند بود.</p>
+                <p>3. در صورت بروز هرگونه مشکل، می‌توانید از طریق پشتیبانی سایت پیگیری کنید.</p>
+                <p>4. امکان بازگشت وجه فقط در صورت بروز مشکل فنی از سمت سایت امکان‌پذیر است.</p>
+                <p>5. کدهای تخفیف فقط یک بار برای هر کاربر قابل استفاده هستند.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // اعتبارسنجی فرم
+            $('#checkoutForm').submit(function(e) {
+                if (!$('#agreeTerms').is(':checked')) {
+                    e.preventDefault();
+                    alert('لطفاً با قوانین و مقررات موافقت کنید.');
+                    return false;
+                }
+
+                // نمایش لودینگ
+                $('#submitOrderBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال پردازش...');
+            });
+
+            // گرفتن تعداد سفارشات کاربر
+            $.ajax({
+                url: '@Url.Action("GetUserOrderCount", "Orders")',
+                type: 'GET',
+                success: function(response) {
+                    $('#orderCount').text(response.count);
+                },
+                error: function() {
+                    $('#orderCount').text('نامشخص');
+                }
+            });
+        });
+    </script>
+}

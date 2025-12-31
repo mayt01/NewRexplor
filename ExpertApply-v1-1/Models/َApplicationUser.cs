@@ -13,10 +13,6 @@ namespace Rexplor.Models
         [StringLength(50)]
         public string? LastName { get; set; }
 
-        [Display(Name = "نقش")]
-        [StringLength(50)]
-        public string? Role { get; set; }
-
         [Display(Name = "عکس پروفایل")]
         public string? ProfilePicture { get; set; }
 

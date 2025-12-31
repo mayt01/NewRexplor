@@ -1,4 +1,4 @@
-﻿@model List<ShoppingCartItem>
+﻿@* @model List<ShoppingCartItem>
 
 @{
     ViewData["Title"] = "سبد خرید";
@@ -162,4 +162,361 @@
             </div>
         </div>
     }
+</div> *@
+
+
+@model List<ShoppingCartItem>
+@{
+    ViewData["Title"] = "سبد خرید";
+
+    // محاسبات قیمت
+    var subtotal = Model.Sum(item => item.OriginalPrice * item.Quantity);
+    var total = Model.Sum(item => item.Price * item.Quantity);
+    var discountAmount = subtotal - total;
+    var hasDiscount = discountAmount > 0;
+
+    // اطلاعات تخفیف از ViewBag
+    var discountCode = ViewBag.DiscountCode as string;
+    var discountPercent = ViewBag.DiscountPercent as int?;
+}
+
+<div class="container py-4">
+    <h1 class="mb-4">
+        <i class="bi bi-cart3 text-primary"></i>
+        @ViewData["Title"]
+    </h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-cart-x display-1 text-muted mb-3"></i>
+                <h4 class="text-muted">سبد خرید شما خالی است</h4>
+                <p class="text-muted mb-4">محصولاتی را به سبد خرید خود اضافه کنید.</p>
+                <a asp-controller="DataFiles" asp-action="Index" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-left"></i> مشاهده فایل‌ها
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- لیست آیتم‌ها -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">محصولات انتخاب شده</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>محصول</th>
+                                        <th class="text-center">قیمت</th>
+                                        <th class="text-center">تعداد</th>
+                                        <th class="text-center">مجموع</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <i class="bi bi-file-earmark-excel text-primary fs-4"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0">@item.Title</h6>
+                                                        <small class="text-muted">@item.CategoryName</small>
+                                                        @if (item.Price < item.OriginalPrice)
+                                                        {
+                                                            <div>
+                                                                <span class="badge bg-success">
+                                                                    <i class="bi bi-percent"></i> تخفیف خورده
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                @if (item.Price < item.OriginalPrice)
+                                                {
+                                                    <div>
+                                                        <span class="text-muted text-decoration-line-through d-block">
+                                                            @item.OriginalPrice.ToString("N0")
+                                                        </span>
+                                                        <span class="text-success fw-bold">
+                                                            @item.Price.ToString("N0") تومان
+                                                        </span>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-success fw-bold">
+                                                        @item.Price.ToString("N0") تومان
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <form asp-action="UpdateQuantity" method="post" class="d-inline">
+                                                    <input type="hidden" name="fileId" value="@item.DataFileId" />
+                                                    <div class="input-group input-group-sm" style="width: 140px; text-align:center;">
+                                                        <button class="btn btn-outline-secondary" type="submit"
+                                                                onclick="this.form.quantity.value=Math.max(1, @item.Quantity-1)">
+                                                            <i class="bi bi-dash"></i>
+                                                        </button>
+                                                        <input type="number" name="quantity" value="@item.Quantity"
+                                                               class="form-control text-center" min="1" max="10" />
+                                                        <button class="btn btn-outline-secondary" type="submit"
+                                                                onclick="this.form.quantity.value=@item.Quantity+1">
+                                                            <i class="bi bi-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span class="fw-bold">
+                                                    @item.Total.ToString("N0") تومان
+                                                </span>
+                                                @if (item.Price < item.OriginalPrice)
+                                                {
+                                                    <div class="small text-success">
+                                                        <i class="bi bi-percent"></i> @((item.OriginalPrice - item.Price).ToString("N0")) تخفیف
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <form asp-action="RemoveFromCart" method="post">
+                                                    <input type="hidden" name="fileId" value="@item.DataFileId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a asp-controller="DataFiles" asp-action="Index"
+                               class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left"></i> ادامه خرید
+                            </a>
+                            <form asp-action="ClearCart" method="post">
+                                <button type="submit" class="btn btn-outline-danger"
+                                        onclick="return confirm('آیا از خالی کردن سبد خرید مطمئن هستید؟')">
+                                    <i class="bi bi-cart-x"></i> خالی کردن سبد
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش کد تخفیف -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <i class="bi bi-percent text-success"></i> اعمال کد تخفیف
+                        </h5>
+
+                        @if (hasDiscount && !string.IsNullOrEmpty(discountCode))
+                        {
+                            <div class="alert alert-success">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-check-circle"></i>
+                                        <strong>کد تخفیف اعمال شد:</strong> @discountCode
+                                        <br>
+                                        <small>تخفیف: @discountPercent% (@discountAmount.ToString("N0") تومان)</small>
+                                    </div>
+                                    <form asp-action="RemoveDiscount" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            حذف تخفیف
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="cartDiscountCode"
+                                       placeholder="کد تخفیف را وارد کنید">
+                                <button class="btn btn-outline-success" type="button" id="applyCartDiscount">
+                                    اعمال تخفیف
+                                </button>
+                            </div>
+                            <div id="cartDiscountMessage" class="small"></div>
+
+                            <div class="alert alert-info mt-3">
+                                <i class="bi bi-info-circle"></i>
+                                <small>
+                                    کد تخفیف را می‌توانید در صفحه جزئیات هر فایل نیز اعمال کنید.
+                                </small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- خلاصه سفارش -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-receipt"></i> خلاصه سفارش
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">تعداد محصولات:</span>
+                                <span class="fw-bold">@Model.Sum(item => item.Quantity)</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">جمع کل:</span>
+                                <span class="fw-bold">@subtotal.ToString("N0") تومان</span>
+                            </div>
+
+                            @if (hasDiscount)
+                            {
+                                <div class="d-flex justify-content-between mb-2 text-success">
+                                    <span class="text-muted">تخفیف:</span>
+                                    <span class="fw-bold">-@discountAmount.ToString("N0") تومان</span>
+                                </div>
+                            }
+
+                            <hr />
+                            <div class="d-flex justify-content-between mb-3">
+                                <span class="h5">مبلغ قابل پرداخت:</span>
+                                <span class="h4 text-success">@total.ToString("N0") تومان</span>
+                            </div>
+
+                            @if (hasDiscount)
+                            {
+                                <div class="alert alert-success">
+                                    <small>
+                                        <i class="bi bi-percent"></i>
+                                        شما <strong>@discountAmount.ToString("N0") تومان</strong> تخفیف دریافت کرده‌اید!
+                                    </small>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-grid">
+                            <a asp-action="Checkout" class="btn btn-success btn-lg">
+                                <i class="bi bi-lock"></i> ادامه جهت پرداخت
+                            </a>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-info-circle"></i>
+                            <small>
+                                پس از پرداخت موفق، لینک دانلود فایل‌ها در پنل کاربری شما فعال می‌شود.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // اعمال تخفیف در سبد خرید
+            $('#applyCartDiscount').click(function() {
+                const discountCode = $('#cartDiscountCode').val().trim();
+
+                if (!discountCode) {
+                    showCartMessage('لطفا کد تخفیف را وارد کنید', 'danger');
+                    return;
+                }
+
+                // نمایش لودینگ
+                const btn = $(this);
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+                // درخواست به سرور
+                $.ajax({
+                    url: '@Url.Action("ApplyDiscount", "Cart")',
+                    type: 'POST',
+                    data: { discountCode: discountCode },
+                    success: function(response) {
+                        btn.prop('disabled', false).html('اعمال تخفیف');
+
+                        if (response.success) {
+                            showCartMessage(response.message, 'success');
+                            // رفرش صفحه بعد از 1 ثانیه
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+                        } else {
+                            showCartMessage(response.message, 'danger');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        btn.prop('disabled', false).html('اعمال تخفیف');
+                        showCartMessage('خطا در اتصال به سرور', 'danger');
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // حذف تخفیف
+            $('form[action*="RemoveDiscount"]').submit(function(e) {
+                e.preventDefault();
+
+                if (confirm('آیا از حذف تخفیف مطمئن هستید؟')) {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            if (response.success) {
+                                // رفرش صفحه
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+
+            // تابع نمایش پیام در سبد خرید
+            function showCartMessage(message, type) {
+                $('#cartDiscountMessage').html('<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                    message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                    '</div>');
+
+                setTimeout(() => {
+                    $('.alert').alert('close');
+                }, 5000);
+            }
+        });
+    </script>
+}

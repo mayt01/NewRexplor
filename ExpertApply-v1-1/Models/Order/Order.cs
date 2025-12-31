@@ -63,6 +63,14 @@ namespace Rexplor.Models
         [Display(Name = "آیپی کاربر")]
         public string? UserIP { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        [Display(Name = "مبلغ تخفیف")]
+        public decimal DiscountAmount { get; set; } = 0;
+
+        [StringLength(50)]
+        [Display(Name = "کد تخفیف استفاده شده")]
+        public string UsedDiscountCode { get; set; }
+
         // Navigation Property
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
@@ -119,16 +127,33 @@ namespace Rexplor.Models
         [Display(Name = "مبلغ کل")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal TotalPrice => UnitPrice * Quantity;
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal OriginalUnitPrice { get; set; }
+
     }
 
+    //public class ShoppingCartItem
+    //{
+    //    public int DataFileId { get; set; }
+    //    public string Title { get; set; }
+    //    public decimal Price { get; set; }
+    //    public int Quantity { get; set; } = 1;
+    //    public string CategoryName { get; set; }
+
+    //    public decimal Total => Price * Quantity;
+    //}
     public class ShoppingCartItem
     {
         public int DataFileId { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
-        public int Quantity { get; set; } = 1;
+        public decimal OriginalPrice { get; set; } // این را اضافه کنید
+        public int Quantity { get; set; }
         public string CategoryName { get; set; }
 
         public decimal Total => Price * Quantity;
+        public decimal OriginalTotal => OriginalPrice * Quantity; // این را اضافه کنید
+        public decimal DiscountAmount => OriginalTotal - Total; // این را اضافه کنید
     }
 }

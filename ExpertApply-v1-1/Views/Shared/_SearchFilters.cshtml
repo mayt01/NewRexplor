@@ -226,10 +226,10 @@
                     <!-- لینک جستجوی سریع کد (اگر کد وارد شده) -->
                     @if (!string.IsNullOrEmpty(ViewBag.SearchUniqueCode))
                     {
-                        <a href="@Url.Action("SearchByCode", new { code = ViewBag.SearchUniqueCode })"
-                           class="btn btn-info ms-2">
-                            <i class="bi bi-arrow-right-circle"></i> برو به این کد
-                        </a>
+                        // <a href="@Url.Action("SearchByCode", new { code = ViewBag.SearchUniqueCode })"
+                        //    class="btn btn-info ms-2">
+                        //     <i class="bi bi-arrow-right-circle"></i> برو به این کد
+                        // </a>
                     }
                 </div>
             </div>
@@ -343,23 +343,23 @@
 <!-- راهنمای جستجوی کد -->
 @if (!string.IsNullOrEmpty(ViewBag.SearchUniqueCode))
 {
-    <div class="alert alert-light border mb-3">
-        <div class="d-flex">
-            <div class="flex-shrink-0">
-                <i class="bi bi-info-circle-fill text-primary fs-4"></i>
-            </div>
-            <div class="flex-grow-1 ms-3">
-                <h6 class="alert-heading">راهنمای جستجوی کد</h6>
-                <p class="mb-1 small">
-                    • برای جستجوی دقیق، کد را کامل وارد کنید (مثال: <code>DF123ABC456</code>)
-                </p>
-                <p class="mb-1 small">
-                    • برای جستجوی بخشی، قسمتی از کد را وارد کنید (مثال: <code>ABC</code>)
-                </p>
-                <p class="mb-0 small">
-                    • برای دسترسی مستقیم، روی دکمه <strong>"برو به این کد"</strong> کلیک کنید
-                </p>
-            </div>
-        </div>
-    </div>
+    // <div class="alert alert-light border mb-3" style="text-align: center; background-color: yellow;">
+    //     <div class="d-flex">
+    //         <div class="flex-shrink-0">
+    //             <i class="bi bi-info-circle-fill text-primary fs-4"></i>
+    //         </div>
+    //         <div class="flex-grow-1 ms-3">
+    //             <h6 class="alert-heading">راهنمای جستجوی کد</h6>
+    //             <p class="mb-1 small">
+    //                 • برای جستجوی دقیق، کد را کامل وارد کنید (مثال: <code>DF123ABC456</code>)
+    //             </p>
+    //             <p class="mb-1 small">
+    //                 • برای جستجوی بخشی، قسمتی از کد را وارد کنید (مثال: <code>ABC</code>)
+    //             </p>
+    //             <p class="mb-0 small">
+    //                 • برای دسترسی مستقیم، روی دکمه <strong>"برو به این کد"</strong> کلیک کنید
+    //             </p>
+    //         </div>
+    //     </div>
+    // </div>
 }

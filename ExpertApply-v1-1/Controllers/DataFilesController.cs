@@ -74,7 +74,7 @@ namespace Rexplor.Controllers
         }
 
         // GET: /DataFiles/Create - فرم آپلود فایل جدید
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Categories = await _context.DataFileCategories.ToListAsync();
@@ -83,7 +83,7 @@ namespace Rexplor.Controllers
 
         // POST: /DataFiles/Create - ذخیره فایل جدید
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DataFileViewModel model)
         {
@@ -152,7 +152,7 @@ namespace Rexplor.Controllers
 
 
         // GET: ویرایش فایل
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var dataFile = await _context.DataFiles.FindAsync(id);
@@ -179,7 +179,7 @@ namespace Rexplor.Controllers
 
         // POST: ویرایش فایل
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditDataFileViewModel model)
         {
@@ -261,7 +261,7 @@ namespace Rexplor.Controllers
         }
 
         // GET: تأیید حذف
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var dataFile = await _context.DataFiles
@@ -278,7 +278,7 @@ namespace Rexplor.Controllers
 
         // POST: حذف قطعی
         [HttpPost, ActionName("Delete")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

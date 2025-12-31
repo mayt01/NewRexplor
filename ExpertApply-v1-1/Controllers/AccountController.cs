@@ -106,7 +106,7 @@ namespace Rexplor.Controllers
             if (result.Succeeded)
             {
                 //await _userManager.AddClaimAsync(user, new Claim("FullName", model.FullName));
-
+                await _userManager.AddToRoleAsync(user, "User"); // رول پیش‌فرض
                 // ورود خودکار کاربر
                 await _signInManager.SignInAsync(user, isPersistent: false);
 

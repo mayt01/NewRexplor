@@ -7,7 +7,7 @@ using Rexplor.Models;
 
 namespace Rexplor.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class DataFileCategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

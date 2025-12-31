@@ -2,6 +2,8 @@
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +28,7 @@
     <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExpertApply.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExpertApply_v1_1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/discount.css" asp-append-version="true" />
 </head>
 <body>
 
@@ -176,6 +179,12 @@
                             <!-- پنل ادمین -->
                             @if (User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
                             {
+                                <!-- اضافه کردن لینک به منوی ادمین -->
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Discounts" asp-action="Index">
+                                        <i class="bi bi-percent"></i> تخفیف‌ها
+                                    </a>
+                                </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle text-warning" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-shield-check"></i> مدیریت
@@ -384,11 +393,11 @@
                 <div class="col-lg-2 col-md-6 mb-4">
                     <h5>شبکه‌های اجتماعی</h5>
                     <div class="social-links">
-                        <a href="https://instagram.com/eee" class="social-link">
+                        <a href="https://instagram.com/rexplor.ir" class="social-link">
                             <img src="icons/Instagram.png" alt="اینستاگرام">
                             <span class="social-text">اینستاگرام</span>
                         </a>
-                        <a href="https://t.me/eee" class="social-link">
+                        <a href="https://t.me/rexplor_ir" class="social-link">
                             <img src="icons/Telegram.png" alt="تلگرام">
                             <span class="social-text">تلگرام</span>
                         </a>

@@ -1,0 +1,215 @@
+﻿@model Discount
+@{
+    ViewData["Title"] = $"ویرایش کد تخفیف {Model.Code}";
+    var files = ViewBag.Files as List<dynamic> ?? new List<dynamic>();
+    var selectedFileIds = ViewBag.SelectedFileIds as List<int> ?? new List<int>();
+}
+
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">کدهای تخفیف</a></li>
+            <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Code</a></li>
+            <li class="breadcrumb-item active">ویرایش</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square"></i> @ViewData["Title"]
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Code" class="form-label">کد تخفیف *</label>
+                                <input asp-for="Code" class="form-control" required />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                                <small class="text-muted">کد باید منحصربفرد باشد</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DiscountPercent" class="form-label">درصد تخفیف *</label>
+                                <div class="input-group">
+                                    <input asp-for="DiscountPercent" class="form-control" min="1" max="100" required />
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <span asp-validation-for="DiscountPercent" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="StartDate" class="form-label">تاریخ شروع *</label>
+                                <input asp-for="StartDate" type="datetime-local" class="form-control" required />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EndDate" class="form-label">تاریخ پایان *</label>
+                                <input asp-for="EndDate" type="datetime-local" class="form-control" required />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="UsageLimit" class="form-label">محدودیت تعداد استفاده</label>
+                                <input asp-for="UsageLimit" class="form-control" min="1" />
+                                <span asp-validation-for="UsageLimit" class="text-danger"></span>
+                                <small class="text-muted">
+                                    خالی = بدون محدودیت
+                                    <br>
+                                    <span class="text-info">تعداد استفاده شده: @Model.UsedCount</span>
+                                </small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MinPurchaseAmount" class="form-label">حداقل مبلغ خرید (تومان)</label>
+                                <input asp-for="MinPurchaseAmount" class="form-control" />
+                                <span asp-validation-for="MinPurchaseAmount" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="MaxDiscountAmount" class="form-label">حداکثر تخفیف (تومان)</label>
+                                <input asp-for="MaxDiscountAmount" class="form-control" />
+                                <span asp-validation-for="MaxDiscountAmount" class="text-danger"></span>
+                                <small class="text-muted">حداکثر مبلغ تخفیف اعمال شده</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    <input asp-for="IsForAllFiles" class="form-check-input" id="isForAllFiles" />
+                                    <label class="form-check-label" for="isForAllFiles">
+                                        برای همه فایل‌ها
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input asp-for="IsActive" class="form-check-input" />
+                                    <label class="form-check-label">
+                                        فعال
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- انتخاب فایل‌ها -->
+                        <div id="fileSelectionSection" class="mb-4" style="@(Model.IsForAllFiles ? "display:none;" : "")">
+                            <label class="form-label">انتخاب فایل‌های مجاز برای تخفیف</label>
+                            <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                                @if (files.Any())
+                                {
+                                    foreach (var file in files)
+                                    {
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox"
+                                                   name="SelectedFileIds"
+                                                   value="@file.Id"
+                                                   class="form-check-input file-checkbox"
+                                                   @(selectedFileIds.Contains(file.Id) ? "checked" : "") />
+                                            <label class="form-check-label">
+                                                @file.Title
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted">هیچ فایل فعالی برای انتخاب وجود ندارد.</p>
+                                }
+                            </div>
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle"></i>
+                                اگر فایلی را انتخاب نکنید، تخفیف فقط روی فایل‌های انتخابی قبلی اعمال می‌شود.
+                            </small>
+                        </div>
+
+                        <!-- اطلاعات فعلی -->
+                        <div class="alert alert-info">
+                            <h6><i class="bi bi-info-circle"></i> اطلاعات فعلی:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small><strong>تاریخ ایجاد:</strong> @Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <small><strong>تعداد استفاده شده:</strong> @Model.UsedCount</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> ذخیره تغییرات
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> انصراف
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger float-end">
+                                <i class="bi bi-trash"></i> حذف کد تخفیف
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // نمایش/پنهان کردن انتخاب فایل‌ها
+            $('#isForAllFiles').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#fileSelectionSection').hide();
+                    // غیرفعال کردن چک‌باکس‌ها
+                    $('.file-checkbox').prop('disabled', true);
+                } else {
+                    $('#fileSelectionSection').show();
+                    $('.file-checkbox').prop('disabled', false);
+                }
+            });
+
+            // اعتبارسنجی تاریخ‌ها
+            $('form').submit(function(e) {
+                const startDate = new Date($('#StartDate').val());
+                const endDate = new Date($('#EndDate').val());
+
+                if (endDate <= startDate) {
+                    e.preventDefault();
+                    alert('تاریخ پایان باید بعد از تاریخ شروع باشد');
+                    return false;
+                }
+
+                // تبدیل کد به uppercase
+                const codeInput = $('#Code');
+                codeInput.val(codeInput.val().toUpperCase());
+
+                // اگر برای همه فایل‌ها نیست و هیچ فایلی انتخاب نشده
+                if (!$('#isForAllFiles').is(':checked')) {
+                    const selectedCount = $('.file-checkbox:checked').length;
+                    if (selectedCount === 0) {
+                        if (!confirm('هیچ فایلی برای تخفیف انتخاب نشده است. آیا مطمئن هستید؟')) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
+            });
+
+            // مقداردهی اولیه وضعیت نمایش بخش فایل‌ها
+            if ($('#isForAllFiles').is(':checked')) {
+                $('.file-checkbox').prop('disabled', true);
+            }
+        });
+    </script>
+}

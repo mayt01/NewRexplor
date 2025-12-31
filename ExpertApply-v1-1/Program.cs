@@ -40,6 +40,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     // ✅ تنظیمات کاربر
     options.User.RequireUniqueEmail = true;
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -75,7 +76,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 // --- MVC & Razor Pages ---
 builder.Services.AddControllersWithViews();
 // بعد از builder.Services.AddControllersWithViews()
-
+builder.Services.AddScoped<IDiscountService, DiscountService>();
+// بعد از builder.Services.AddDbContext
 // برای دسترسی به HttpContext
 builder.Services.AddHttpContextAccessor(); // برای دسترسی به HttpContext در سرویس
 builder.Services.AddScoped<IZarinPalService, ZarinPalService>();
@@ -121,5 +123,30 @@ app.MapControllerRoute(
     name: "codeSearch",
     pattern: "file/{code}",
     defaults: new { controller = "DataFiles", action = "SearchByCode" });
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    string[] roles = { "Admin", "Editor", "User" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // ساخت Admin اولیه
+    var user = await userManager.FindByEmailAsync("mehdimoradi.0101@gmail.com");
+
+    if (user != null && !await userManager.IsInRoleAsync(user, "Admin"))
+    {
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
+
 
 app.Run();

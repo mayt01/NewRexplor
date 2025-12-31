@@ -1,0 +1,135 @@
+﻿@model Discount
+@{
+    ViewData["Title"] = $"حذف کد تخفیف {Model.Code}";
+}
+
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">کدهای تخفیف</a></li>
+            <li class="breadcrumb-item"><a asp-action="Details" asp-route-id="@Model.Id">@Model.Code</a></li>
+            <li class="breadcrumb-item active">حذف</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> @ViewData["Title"]
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-exclamation-octagon"></i> هشدار!</h6>
+                        <p class="mb-0">
+                            آیا از حذف این کد تخفیف مطمئن هستید؟ این عمل غیرقابل بازگشت است.
+                        </p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6>اطلاعات کد تخفیف:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">کد تخفیف</th>
+                                    <td class="text-success fw-bold">@Model.Code</td>
+                                </tr>
+                                <tr>
+                                    <th>درصد تخفیف</th>
+                                    <td>@Model.DiscountPercent%</td>
+                                </tr>
+                                <tr>
+                                    <th>تاریخ شروع</th>
+                                    <td>@Model.StartDate.ToString("yyyy/MM/dd")</td>
+                                </tr>
+                                <tr>
+                                    <th>تاریخ پایان</th>
+                                    <td>@Model.EndDate.ToString("yyyy/MM/dd")</td>
+                                </tr>
+                                <tr>
+                                    <th>تعداد استفاده شده</th>
+                                    <td>@Model.UsedCount @(Model.UsageLimit.HasValue ? $"/{Model.UsageLimit.Value}" : "")</td>
+                                </tr>
+                                <tr>
+                                    <th>وضعیت</th>
+                                    <td>
+                                        @if (Model.IsActive)
+                                        {
+                                            <span class="badge bg-success">فعال</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">غیرفعال</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    @if (Model.UsedCount > 0)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-info-circle"></i>
+                            این کد تخفیف <strong>@Model.UsedCount بار</strong> استفاده شده است.
+                            با حذف آن، اطلاعات استفاده شده نیز حذف خواهد شد.
+                        </div>
+                    }
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label for="confirmText" class="form-label">
+                                برای تأیید حذف، عبارت <strong>"@Model.Code"</strong> را در کادر زیر وارد کنید:
+                            </label>
+                            <input type="text" class="form-control" id="confirmText"
+                                   placeholder="@Model.Code را وارد کنید" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger" id="deleteBtn" disabled>
+                                <i class="bi bi-trash"></i> حذف نهایی کد تخفیف
+                            </button>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> انصراف و بازگشت
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // فعال کردن دکمه حذف فقط وقتی متن مطابقت دارد
+            $('#confirmText').on('input', function() {
+                const confirmText = $(this).val().trim();
+                const code = '@Model.Code';
+                const deleteBtn = $('#deleteBtn');
+
+                if (confirmText === code) {
+                    deleteBtn.prop('disabled', false);
+                } else {
+                    deleteBtn.prop('disabled', true);
+                }
+            });
+
+            // تأیید نهایی قبل از حذف
+            $('form').submit(function(e) {
+                if (!confirm('آیا از حذف نهایی این کد تخفیف مطمئن هستید؟ این عمل قابل بازگشت نیست.')) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // نمایش لودینگ
+                $('#deleteBtn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال حذف...');
+            });
+        });
+    </script>
+}
