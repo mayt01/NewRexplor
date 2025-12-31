@@ -278,7 +278,7 @@
                                                     </span>
                                                 }
                                             </td>
-                                            <td class="text-center align-middle">
+                                            @* <td class="text-center align-middle">
                                                 <form asp-action="UpdateQuantity" method="post" class="d-inline">
                                                     <input type="hidden" name="fileId" value="@item.DataFileId" />
                                                     <div class="input-group input-group-sm" style="width: 140px; text-align:center;">
@@ -294,6 +294,10 @@
                                                         </button>
                                                     </div>
                                                 </form>
+                                            </td> *@
+                                            <td class="text-center align-middle">
+                                                1
+                                                <input type="hidden" name="quantity" value="1" />
                                             </td>
                                             <td class="text-center align-middle">
                                                 <span class="fw-bold">
@@ -336,7 +340,7 @@
                 </div>
 
                 <!-- بخش کد تخفیف -->
-                <div class="card shadow-sm">
+@*                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-3">
                             <i class="bi bi-percent text-success"></i> اعمال کد تخفیف
@@ -379,7 +383,7 @@
                             </div>
                         }
                     </div>
-                </div>
+                </div> *@
             </div>
 
             <!-- خلاصه سفارش -->

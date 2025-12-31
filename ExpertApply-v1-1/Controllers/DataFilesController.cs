@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rexplor.Data;
 using Rexplor.Models;
+using System.Text.Json;
 
 namespace Rexplor.Controllers
 {
@@ -64,6 +65,20 @@ namespace Rexplor.Controllers
             {
                 return NotFound();
             }
+
+            // اگر کاربر لاگین کرده، سبد خریدش را بگیر
+            List<ShoppingCartItem> userCart = new();
+            if (User.Identity.IsAuthenticated)
+            {
+                var cartJson = HttpContext.Session.GetString("ShoppingCart");
+                if (!string.IsNullOrEmpty(cartJson))
+                {
+                    userCart = JsonSerializer.Deserialize<List<ShoppingCartItem>>(cartJson)
+                              ?? new List<ShoppingCartItem>();
+                }
+            }
+
+            ViewBag.UserCart = userCart;
 
             // افزایش تعداد بازدید
             dataFile.ViewCount++;

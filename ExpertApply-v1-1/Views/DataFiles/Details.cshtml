@@ -1,14 +1,23 @@
 ﻿@using Rexplor.Extensions
 @using System.Security.Claims
 @model DataFile
+@using Rexplor.Models
 
 
 @{
     ViewData["Title"] = Model.Title;
+
+    // تعریف متغیر isInCart در اینجا
+    bool isInCart = false;
+    if (User.Identity.IsAuthenticated)
+    {
+        // استفاده از extension method
+        isInCart = Context.IsInCart(Model.Id);
+    }
 }
 
 <div class="container py-4">
-    <nav aria-label="breadcrumb">
+@*     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-action="Index">فایل‌ها</a></li>
             <li class="breadcrumb-item">
@@ -18,7 +27,8 @@
             </li>
             <li class="breadcrumb-item active">@Model.Title</li>
         </ol>
-    </nav>
+    </nav> *@
+    <br /><br />
 
     <div class="row">
         <!-- اطلاعات فایل -->
@@ -65,37 +75,6 @@
                             </div>
                         </div>
                     }
-
-@*                     <div class="row text-center mb-4">
-                        <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <i class="bi bi-eye display-6 text-primary"></i>
-                                <h5 class="mt-2">@Model.ViewCount</h5>
-                                <small class="text-muted">بازدید</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <i class="bi bi-download display-6 text-success"></i>
-                                <h5 class="mt-2">@Model.DownloadCount</h5>
-                                <small class="text-muted">دانلود</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <i class="bi bi-star display-6 text-warning"></i>
-                                <h5 class="mt-2">@Model.Rating.ToString("0.0")</h5>
-                                <small class="text-muted">امتیاز</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <i class="bi bi-chat display-6 text-info"></i>
-                                <h5 class="mt-2">@Model.ReviewCount</h5>
-                                <small class="text-muted">نظر</small>
-                            </div>
-                        </div>
-                    </div> *@
                 </div>
             </div>
         </div>
@@ -104,29 +83,10 @@
         <div class="col-lg-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-@*                     <h5 class="card-title mb-3">
-                        <i class="bi bi-person"></i> فروشنده
-                    </h5> *@
-
-@*                     <div class="mb-3">
-                        <small class="text-muted">
-                            <i class="bi bi-calendar"></i>
-                            آپلود شده در: @Model.UpdatedDate.ToString("yyyy/MM/dd")
-                        </small>
-                    </div> *@
-
                     <hr>
 
-                    <div class="d-grid gap-2">
-@*                         @if (User.Identity.IsAuthenticated)
-                        {
-                            <button class="btn btn-success btn-lg">
-                                <i class="bi bi-cart-plus"></i> افزودن به سبد خرید
-                            </button>
-                            <button class="btn btn-outline-primary">
-                                <i class="bi bi-heart"></i> افزودن به علاقه‌مندی‌ها
-                            </button>
-                        } *@
+
+                     @* <div class="d-grid gap-2">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline w-100">
@@ -136,14 +96,42 @@
                                     <i class="bi bi-cart-plus"></i> افزودن به سبد خرید
                                 </button>
                             </form>
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Login"
+                               class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> ورود برای خرید
+                            </a>
+                        } 
+                    </div> *@ 
 
-@*                             <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline w-100">
-                                <input type="hidden" name="fileId" value="@Model.Id" />
-                                <input type="hidden" name="quantity" value="1" />
-                                <button type="submit" class="btn btn-outline-primary w-100">
-                                    <i class="bi bi-heart"></i> افزودن به علاقه‌مندی‌ها
+                    <div class="d-grid gap-2">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @if (isInCart)
+                            {
+                                <button class="btn btn-secondary btn-lg w-100" disabled>
+                                    <i class="bi bi-cart-check"></i> در سبد خرید موجود است
                                 </button>
-                            </form> *@
+                                <a asp-controller="Cart" asp-action="Index" class="btn btn-outline-primary btn-sm mt-2">
+                                    <i class="bi bi-eye"></i> مشاهده سبد خرید
+                                </a>
+                            }
+                            else
+                            {
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline w-100" id="addToCartForm">
+                                    <input type="hidden" name="fileId" value="@Model.Id" />
+                                    <input type="hidden" name="quantity" value="1" />
+                                    <!-- فیلدهای مخفی برای اطلاعات تخفیف -->
+                                    <input type="hidden" name="discountCode" id="hiddenDiscountCode" value="" />
+                                    <input type="hidden" name="finalPrice" id="hiddenFinalPrice" value="" />
+
+                                    <button type="submit" class="btn btn-success btn-lg w-100" id="addToCartBtn">
+                                        <i class="bi bi-cart-plus"></i> افزودن به سبد خرید
+                                    </button>
+                                </form>
+                            }
                         }
                         else
                         {
@@ -153,6 +141,8 @@
                             </a>
                         }
                     </div>
+
+
                 </div>
             </div>
 
@@ -171,15 +161,17 @@
                             <i class="bi bi-file-earmark-text text-success"></i>
                             <strong>فرمت:</strong> @Model.FileExtension
                         </li>
-                        <li class="mb-2">
+@*                         <li class="mb-2">
                             <i class="bi bi-calendar-check text-warning"></i>
                             <strong>آخرین بروزرسانی:</strong> @Model.UpdatedDate.ToString("yyyy/MM/dd")
-                        </li>
-@*                         <li>
-                            <i class="bi bi-check-circle text-success"></i>
-                            <strong>وضعیت:</strong>
-                            <span class="badge bg-success">فعال</span>
                         </li> *@
+                        @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                        {
+                            <li class="mb-2">
+                                <i class="bi bi-calendar-check text-warning"></i>
+                                <strong>آخرین بروزرسانی:</strong> @Model.UpdatedDate.ToString("yyyy/MM/dd")
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -252,7 +244,7 @@
             </a>
         }
 
-        @if (User.Identity.IsAuthenticated)
+@*         @if (User.Identity.IsAuthenticated)
         {
             <form asp-controller="Cart" asp-action="AddToCart" method="post" class="d-inline">
                 <input type="hidden" name="fileId" value="@Model.Id" />
@@ -261,7 +253,7 @@
                     <i class="bi bi-cart-plus"></i> افزودن به سبد خرید (@Model.Price.ToString("N0") تومان)
                 </button>
             </form>
-        }
+        } *@
     </div>
 </div>
 <hr />
@@ -338,6 +330,103 @@
 
 @section Scripts {
     <script>
+
+
+                // در ویوی جزئیات فایل (بخش Scripts)
+        $(document).ready(function() {
+            // جلوگیری از ارسال مکرر فرم
+            $('#addToCartForm').submit(function(e) {
+                const btn = $('#addToCartBtn');
+
+                // اگر دکمه غیرفعال است، ارسال نشود
+                if (btn.prop('disabled')) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // غیرفعال کردن دکمه
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> در حال افزودن...');
+
+                // اگر تخفیف اعمال شده، اطلاعات را به فرم اضافه کن
+                if (currentDiscount) {
+                    $('#hiddenDiscountCode').val(currentDiscount.code);
+                    $('#hiddenFinalPrice').val(currentDiscount.finalAmount);
+                }
+
+                // AJAX برای جلوگیری از رفرش صفحه
+                e.preventDefault();
+
+                const formData = {
+                    fileId: @Model.Id,
+                    quantity: 1,
+                    discountCode: $('#hiddenDiscountCode').val(),
+                    finalPrice: $('#hiddenFinalPrice').val()
+                };
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            // نمایش پیام موفقیت
+                            showNotification(response.message, 'success');
+
+                            // تغییر دکمه به حالت "در سبد موجود است"
+                            $('#addToCartForm').html(`
+                                <button class="btn btn-secondary btn-lg w-100" disabled>
+                                    <i class="bi bi-cart-check"></i> در سبد خرید موجود است
+                                </button>
+                                <a href="/Cart" class="btn btn-outline-primary btn-sm mt-2">
+                                    <i class="bi bi-eye"></i> مشاهده سبد خرید
+                                </a>
+                            `);
+
+                            // به‌روزرسانی شمارنده سبد
+                            updateCartCounter(response.cartCount);
+                        } else {
+                            // نمایش پیام خطا
+                            showNotification(response.message, 'danger');
+
+                            // فعال کردن دکمه
+                            btn.prop('disabled', false).html('<i class="bi bi-cart-plus"></i> افزودن به سبد خرید');
+                        }
+                    },
+                    error: function() {
+                        showNotification('خطا در اتصال به سرور', 'danger');
+                        btn.prop('disabled', false).html('<i class="bi bi-cart-plus"></i> افزودن به سبد خرید');
+                    }
+                });
+            });
+
+            function showNotification(message, type) {
+                // کد نمایش نوتیفیکیشن
+                const toast = `
+                    <div class="toast align-items-center text-bg-${type} border-0 show"
+                         role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                ${message}
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast"></button>
+                        </div>
+                    </div>`;
+
+                $('body').append(toast);
+
+                setTimeout(() => {
+                    $('.toast').remove();
+                }, 3000);
+            }
+
+            function updateCartCounter(count) {
+                // اگر شمارنده سبد در لایوت دارید، آن را به‌روزرسانی کنید
+                $('#cartCount').text(count);
+            }
+        });
+
+
         $(document).ready(function() {
             const fileId = @Model.Id;
             const originalPrice = @Model.Price;

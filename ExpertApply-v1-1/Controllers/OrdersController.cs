@@ -470,6 +470,9 @@ namespace Rexplor.Controllers
 
                 if (verification.IsSuccess)
                 {
+
+                    HttpContext.Session.Remove("ShoppingCart");
+
                     // پرداخت موفق
                     order.PaymentStatus = PaymentStatus.Paid;
                     order.IsPaid = true;

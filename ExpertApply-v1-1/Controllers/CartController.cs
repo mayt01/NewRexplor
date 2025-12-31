@@ -356,9 +356,87 @@ namespace Rexplor.Controllers
         }
 
         // POST: اضافه کردن به سبد خرید
+        //[HttpPost]
+        //public async Task<IActionResult> AddToCart(int fileId, int quantity = 1,
+        //    string discountCode = null, decimal? discountAmount = null, decimal? finalPrice = null)
+        //{
+        //    var file = await _context.DataFiles
+        //        .Include(f => f.Category)
+        //        .FirstOrDefaultAsync(f => f.Id == fileId && f.IsActive);
+
+        //    if (file == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var cart = GetCart();
+        //    var existingItem = cart.FirstOrDefault(item => item.DataFileId == fileId);
+
+        //    // قیمت نهایی
+        //    decimal itemFinalPrice = file.Price;
+        //    decimal itemOriginalPrice = file.Price;
+
+        //    // اگر قیمت نهایی ارسال شده (از تخفیف)
+        //    if (finalPrice.HasValue && finalPrice.Value > 0)
+        //    {
+        //        itemFinalPrice = finalPrice.Value;
+        //    }
+        //    // اگر کد تخفیف ارسال شده
+        //    else if (!string.IsNullOrEmpty(discountCode))
+        //    {
+        //        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //        var validation = await _discountService.ValidateDiscountAsync(
+        //            discountCode, fileId, file.Price, userId);
+
+        //        if (validation.IsValid)
+        //        {
+        //            itemFinalPrice = validation.FinalAmount;
+        //        }
+        //    }
+
+        //    if (existingItem != null)
+        //    {
+        //        existingItem.Quantity += quantity;
+        //        existingItem.Price = itemFinalPrice;
+        //        // ذخیره قیمت اصلی اگر هنوز ذخیره نشده
+        //        if (existingItem.OriginalPrice == 0)
+        //        {
+        //            existingItem.OriginalPrice = itemOriginalPrice;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        cart.Add(new ShoppingCartItem
+        //        {
+        //            DataFileId = file.Id,
+        //            Title = file.Title,
+        //            Price = itemFinalPrice,
+        //            OriginalPrice = itemOriginalPrice,
+        //            Quantity = quantity,
+        //            CategoryName = file.Category?.Name ?? "بدون دسته"
+        //        });
+        //    }
+
+        //    SaveCart(cart);
+
+        //    TempData["SuccessMessage"] = $"✅ «{file.Title}» به سبد خرید اضافه شد.";
+
+        //    // اگر درخواست AJAX باشد
+        //    if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        //    {
+        //        return Json(new
+        //        {
+        //            success = true,
+        //            message = $"«{file.Title}» به سبد خرید اضافه شد.",
+        //            cartCount = cart.Sum(item => item.Quantity)
+        //        });
+        //    }
+
+        //    return RedirectToAction("Details", "DataFiles", new { id = fileId });
+        //}
         [HttpPost]
         public async Task<IActionResult> AddToCart(int fileId, int quantity = 1,
-            string discountCode = null, decimal? discountAmount = null, decimal? finalPrice = null)
+    string discountCode = null, decimal? discountAmount = null, decimal? finalPrice = null)
         {
             var file = await _context.DataFiles
                 .Include(f => f.Category)
@@ -371,6 +449,24 @@ namespace Rexplor.Controllers
 
             var cart = GetCart();
             var existingItem = cart.FirstOrDefault(item => item.DataFileId == fileId);
+
+            // **بررسی: اگر قبلاً در سبد خرید موجود است**
+            if (existingItem != null)
+            {
+                TempData["ErrorMessage"] = $"⚠️ «{file.Title}» قبلاً به سبد خرید اضافه شده است.";
+
+                // اگر درخواست AJAX باشد
+                if (HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = $"«{file.Title}» قبلاً به سبد خرید اضافه شده است."
+                    });
+                }
+
+                return RedirectToAction("Details", "DataFiles", new { id = fileId });
+            }
 
             // قیمت نهایی
             decimal itemFinalPrice = file.Price;
@@ -394,28 +490,16 @@ namespace Rexplor.Controllers
                 }
             }
 
-            if (existingItem != null)
+            // **همیشه quantity = 1 برای فایل‌های دیجیتال**
+            cart.Add(new ShoppingCartItem
             {
-                existingItem.Quantity += quantity;
-                existingItem.Price = itemFinalPrice;
-                // ذخیره قیمت اصلی اگر هنوز ذخیره نشده
-                if (existingItem.OriginalPrice == 0)
-                {
-                    existingItem.OriginalPrice = itemOriginalPrice;
-                }
-            }
-            else
-            {
-                cart.Add(new ShoppingCartItem
-                {
-                    DataFileId = file.Id,
-                    Title = file.Title,
-                    Price = itemFinalPrice,
-                    OriginalPrice = itemOriginalPrice,
-                    Quantity = quantity,
-                    CategoryName = file.Category?.Name ?? "بدون دسته"
-                });
-            }
+                DataFileId = file.Id,
+                Title = file.Title,
+                Price = itemFinalPrice,
+                OriginalPrice = itemOriginalPrice,
+                Quantity = 1, // **همیشه 1**
+                CategoryName = file.Category?.Name ?? "بدون دسته"
+            });
 
             SaveCart(cart);
 
@@ -686,11 +770,96 @@ namespace Rexplor.Controllers
         }
 
         // POST: ایجاد سفارش
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateOrder()
+        //{
+        //    var cart = GetCart();
+        //    if (!cart.Any())
+        //    {
+        //        TempData["ErrorMessage"] = "سبد خرید شما خالی است.";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //    if (string.IsNullOrEmpty(userId))
+        //    {
+        //        return Unauthorized();
+        //    }
+
+        //    try
+        //    {
+        //        // محاسبه مبالغ
+        //        decimal subtotal = cart.Sum(item => item.OriginalPrice * item.Quantity);
+        //        decimal total = cart.Sum(item => item.Price * item.Quantity);
+        //        decimal discountAmount = subtotal - total;
+
+        //        // اطلاعات تخفیف
+        //        var discountData = GetDiscountFromSession();
+        //        string discountCode = discountData?.Code;
+
+        //        // ایجاد سفارش جدید
+        //        var order = new Order
+        //        {
+        //            UserId = userId,
+        //            OrderDate = DateTime.Now,
+        //            TotalAmount = total, // مبلغ نهایی با تخفیف
+        //            DiscountAmount = discountAmount, // مبلغ تخفیف
+        //            UsedDiscountCode = discountCode,
+        //            PaymentStatus = PaymentStatus.Pending,
+        //            Status = "در انتظار پرداخت",
+        //            UserIP = HttpContext.Connection.RemoteIpAddress?.ToString()
+        //        };
+
+        //        // اضافه کردن آیتم‌ها به سفارش
+        //        foreach (var cartItem in cart)
+        //        {
+        //            var file = await _context.DataFiles.FindAsync(cartItem.DataFileId);
+
+        //            if (file != null)
+        //            {
+        //                var orderItem = new OrderItem
+        //                {
+        //                    DataFileId = file.Id,
+        //                    UnitPrice = cartItem.Price, // قیمت با تخفیف
+        //                    Quantity = cartItem.Quantity
+        //                };
+
+        //                order.OrderItems.Add(orderItem);
+        //            }
+        //        }
+
+        //        // ذخیره سفارش
+        //        _context.Orders.Add(order);
+        //        await _context.SaveChangesAsync();
+
+        //        // ثبت استفاده از تخفیف
+        //        if (!string.IsNullOrEmpty(discountCode))
+        //        {
+        //            await _discountService.UseDiscountAsync(discountCode, userId, null, order.Id);
+        //        }
+
+        //        // خالی کردن سبد خرید
+        //        ClearCartSession();
+        //        ClearDiscountFromSession();
+
+        //        TempData["SuccessMessage"] = $"✅ سفارش شما با شماره {order.OrderNumber} ثبت شد.";
+        //        return RedirectToAction("OrderDetails", "Orders", new { id = order.Id });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error creating order: {ex.Message}");
+        //        TempData["ErrorMessage"] = "خطا در ایجاد سفارش. لطفاً مجدداً تلاش کنید.";
+        //        return RedirectToAction(nameof(Checkout));
+        //    }
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateOrder()
         {
             var cart = GetCart();
+
             if (!cart.Any())
             {
                 TempData["ErrorMessage"] = "سبد خرید شما خالی است.";
@@ -705,26 +874,19 @@ namespace Rexplor.Controllers
 
             try
             {
-                // محاسبه مبالغ
-                decimal subtotal = cart.Sum(item => item.OriginalPrice * item.Quantity);
-                decimal total = cart.Sum(item => item.Price * item.Quantity);
-                decimal discountAmount = subtotal - total;
-
-                // اطلاعات تخفیف
                 var discountData = GetDiscountFromSession();
-                string discountCode = discountData?.Code;
-
+                string discountCode = discountData?.Code ?? string.Empty;
                 // ایجاد سفارش جدید
                 var order = new Order
                 {
                     UserId = userId,
                     OrderDate = DateTime.Now,
-                    TotalAmount = total, // مبلغ نهایی با تخفیف
-                    DiscountAmount = discountAmount, // مبلغ تخفیف
-                    UsedDiscountCode = discountCode,
+                    TotalAmount = cart.Sum(item => item.Total),
                     PaymentStatus = PaymentStatus.Pending,
                     Status = "در انتظار پرداخت",
-                    UserIP = HttpContext.Connection.RemoteIpAddress?.ToString()
+                    UserIP = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    UsedDiscountCode = discountCode, // ✅ این خط رو اضافه کنید
+                    DiscountAmount = 0 // این هم اگر لازمه
                 };
 
                 // اضافه کردن آیتم‌ها به سفارش
@@ -737,7 +899,7 @@ namespace Rexplor.Controllers
                         var orderItem = new OrderItem
                         {
                             DataFileId = file.Id,
-                            UnitPrice = cartItem.Price, // قیمت با تخفیف
+                            UnitPrice = file.Price,
                             Quantity = cartItem.Quantity
                         };
 
@@ -749,18 +911,9 @@ namespace Rexplor.Controllers
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                // ثبت استفاده از تخفیف
-                if (!string.IsNullOrEmpty(discountCode))
-                {
-                    await _discountService.UseDiscountAsync(discountCode, userId, null, order.Id);
-                }
+                // ✅ تغییر مهم اینجاست: به صفحه Payment هدایت کن نه OrderDetails
+                return RedirectToAction("Payment", "Orders", new { id = order.Id });
 
-                // خالی کردن سبد خرید
-                ClearCartSession();
-                ClearDiscountFromSession();
-
-                TempData["SuccessMessage"] = $"✅ سفارش شما با شماره {order.OrderNumber} ثبت شد.";
-                return RedirectToAction("OrderDetails", "Orders", new { id = order.Id });
             }
             catch (Exception ex)
             {

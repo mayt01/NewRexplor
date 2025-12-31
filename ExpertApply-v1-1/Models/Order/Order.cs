@@ -69,7 +69,7 @@ namespace Rexplor.Models
 
         [StringLength(50)]
         [Display(Name = "کد تخفیف استفاده شده")]
-        public string UsedDiscountCode { get; set; }
+        public string? UsedDiscountCode { get; set; }
 
         // Navigation Property
         public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
