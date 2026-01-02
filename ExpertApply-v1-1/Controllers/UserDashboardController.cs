@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Rexplor.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserDashboardController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -1,101 +1,4 @@
-﻿//using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using Rexplor.Data;
-//using Rexplor.Models;
-//using System.Threading.Tasks;
-//using System.Linq;
-
-//[Authorize]
-//public class OrdersController : Controller
-//{
-//    private readonly ApplicationDbContext _context;
-//    private readonly UserManager<IdentityUser> _userManager;
-
-//    public OrdersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
-//    {
-//        _context = context;
-//        _userManager = userManager;
-//    }
-
-//    // نمایش فرم سفارش
-//    [HttpGet]
-//    public IActionResult Create()
-//    {
-//        return View();
-//    }
-
-//    // ثبت سفارش
-//    [HttpPost]
-//    public async Task<IActionResult> Create(string fileName, decimal price)
-//    {
-//        var user = await _userManager.GetUserAsync(User);
-//        if (user == null) return RedirectToAction("Login", "Account");
-
-//        var order = new Order
-//        {
-//            UserId = user.Id,
-//            FileName = fileName,
-//            Price = price,
-//            IsPaid = false
-//        };
-
-//        _context.Orders.Add(order);
-//        await _context.SaveChangesAsync();
-
-//        // شبیه‌سازی پرداخت: می‌توانیم بعد از پرداخت IsPaid را true کنیم
-//        return RedirectToAction("PaymentSimulation", new { id = order.Id });
-//    }
-
-//    // شبیه‌سازی پرداخت
-//    [HttpGet]
-//    public async Task<IActionResult> PaymentSimulation(int id)
-//    {
-//        var user = await _userManager.GetUserAsync(User);
-//        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
-//        if (order == null) return NotFound();
-
-//        // فرض کنید کاربر پرداخت موفق انجام داد
-//        order.IsPaid = true;
-//        await _context.SaveChangesAsync();
-
-//        return RedirectToAction("MyOrders");
-//    }
-
-//    // نمایش سفارش‌های کاربر
-//    [HttpGet]
-//    public async Task<IActionResult> MyOrders()
-//    {
-//        var user = await _userManager.GetUserAsync(User);
-//        if (user == null) return RedirectToAction("Login", "Account");
-
-//        var orders = await _context.Orders
-//            .Where(o => o.UserId == user.Id)
-//            .OrderByDescending(o => o.OrderDate)
-//            .ToListAsync();
-
-//        return View(orders);
-//    }
-
-//    // دانلود فایل (اگر پرداخت شده باشد)
-//    [HttpGet]
-//    public async Task<IActionResult> Download(int id)
-//    {
-//        var user = await _userManager.GetUserAsync(User);
-//        var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
-
-//        if (order == null || !order.IsPaid) return Forbid();
-
-//        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files", order.FileName);
-//        if (!System.IO.File.Exists(filePath)) return NotFound();
-
-//        var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-//        return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", order.FileName);
-//    }
-//}
-
-
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -150,26 +53,6 @@ namespace Rexplor.Controllers
             return View(orders);
         }
 
-        //// GET: جزئیات سفارش
-        //[HttpGet]
-        //public async Task<IActionResult> OrderDetails(int id)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    var order = await _context.Orders
-        //        .Include(o => o.OrderItems)
-        //        .ThenInclude(oi => oi.DataFile)
-        //        .ThenInclude(df => df.Category)
-        //        .Include(o => o.User)
-        //        .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
-
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(order);
-        //}
 
         [HttpGet]
         public async Task<IActionResult> OrderDetails(int id)
@@ -236,73 +119,6 @@ namespace Rexplor.Controllers
             }
         }
 
-        // GET: پرداخت سفارش
-        //[HttpGet]
-        //public async Task<IActionResult> Payment(int id)
-        //{
-        //    var user = await _userManager.GetUserAsync(User);
-
-        //    var order = await _context.Orders
-        //        .Include(o => o.OrderItems)
-        //        .ThenInclude(oi => oi.DataFile)
-        //        .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
-
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (order.PaymentStatus == PaymentStatus.Paid)
-        //    {
-        //        TempData["InfoMessage"] = "این سفارش قبلاً پرداخت شده است.";
-        //        return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
-        //    }
-
-
-
-        //    //// TODO: در اینجا باید درگاه زرین‌پال را فراخوانی کنید
-        //    try
-        //    {
-        //        // ایجاد Callback URL
-        //        var callbackUrl = Url.Action("VerifyPayment", "Orders",
-        //            new { id = order.Id },
-        //            protocol: HttpContext.Request.Scheme);
-
-        //        // درخواست پرداخت به زرین‌پال
-        //        var paymentResponse = await _zarinPalService.RequestPaymentAsync(
-        //            amount: order.TotalAmount,
-        //            description: $"پرداخت سفارش #{order.OrderNumber} - {order.OrderItems.Count} فایل",
-        //            callbackUrl: callbackUrl,
-        //            email: user.Email);
-
-        //        if (paymentResponse.Status == 100) // موفق
-        //        {
-        //            // ذخیره Authority در دیتابیس
-        //            order.TransactionId = paymentResponse.Authority;
-        //            await _context.SaveChangesAsync();
-
-        //            // هدایت به درگاه زرین‌پال
-        //            return Redirect(paymentResponse.GatewayURL);
-        //        }
-        //        else
-        //        {
-        //            TempData["ErrorMessage"] = $"خطا در اتصال به درگاه پرداخت: {paymentResponse.Message}";
-        //            return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        TempData["ErrorMessage"] = $"خطا: {ex.Message}";
-        //        return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
-        //    }
-        //    //// TODO: انتهای فراخوانی زرین پال
-
-        //    //ViewBag.Order = order;
-        //    //ViewBag.TotalAmount = order.TotalAmount;
-
-        //    //// برای تست، مستقیماً به شبیه‌سازی پرداخت هدایت می‌کنیم
-        //    //return RedirectToAction("PaymentSimulation", new { id = order.Id });
-        //}
 
         [HttpGet]
         public async Task<IActionResult> Payment(int id)
@@ -367,65 +183,86 @@ namespace Rexplor.Controllers
             }
         }
 
+
         //[HttpGet]
         //public async Task<IActionResult> VerifyPayment(int id, string Authority, string Status)
         //{
         //    try
         //    {
+        //        Console.WriteLine($"🔄 تأیید پرداخت. OrderId: {id}, Authority: {Authority}, Status: {Status}");
+
         //        var user = await _userManager.GetUserAsync(User);
+        //        if (user == null) return RedirectToAction("Login", "Account");
+
         //        var order = await _context.Orders
-        //            .Include(o => o.OrderItems)
         //            .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
 
         //        if (order == null)
         //        {
-        //            return NotFound();
+        //            Console.WriteLine($"❌ سفارش #{id} برای تأیید پیدا نشد");
+        //            TempData["ErrorMessage"] = "سفارش مورد نظر یافت نشد.";
+        //            return RedirectToAction("MyOrders");
         //        }
 
-        //        // کاربر از پرداخت انصراف داد
+        //        // کاربر از پرداخت انصراف داده
         //        if (Status != "OK")
         //        {
+        //            Console.WriteLine($"⏹️ کاربر پرداخت را لغو کرد. OrderId: {id}");
+
+        //            order.PaymentStatus = PaymentStatus.Failed;
+        //            order.Status = "لغو توسط کاربر";
+        //            await _context.SaveChangesAsync();
+
         //            TempData["ErrorMessage"] = "پرداخت لغو شد.";
-        //            return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
+        //            return RedirectToAction("OrderDetails", new { id });
         //        }
 
         //        // تأیید پرداخت با زرین‌پال
         //        var verification = await _zarinPalService.VerifyPaymentAsync(
         //            authority: Authority,
-        //            amount: order.TotalAmount);
+        //            amount: order.TotalAmount
+        //        );
 
-        //        if (verification.Status == 100 || verification.Status == 101)
+        //        if (verification.IsSuccess)
         //        {
+
+        //            HttpContext.Session.Remove("ShoppingCart");
+
         //            // پرداخت موفق
         //            order.PaymentStatus = PaymentStatus.Paid;
         //            order.IsPaid = true;
         //            order.PaymentDate = DateTime.Now;
         //            order.Status = "پرداخت موفق";
-        //            order.TransactionId = verification.RefID.ToString();
-        //            order.PaymentReference = verification.RefID.ToString();
+        //            order.PaymentReference = verification.RefId.ToString();
 
         //            await _context.SaveChangesAsync();
 
-        //            TempData["SuccessMessage"] =
-        //                $"✅ پرداخت با موفقیت انجام شد. " +
-        //                $"کد پیگیری: {verification.RefID}";
+        //            Console.WriteLine($"✅ پرداخت تأیید شد. RefId: {verification.RefId}");
 
-        //            return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
+        //            TempData["SuccessMessage"] =
+        //                $"✅ پرداخت موفق!<br>" +
+        //                $"<strong>کد پیگیری:</strong> {verification.RefId}<br>" +
+        //                $"<strong>شماره سفارش:</strong> {order.OrderNumber}";
         //        }
         //        else
         //        {
         //            // پرداخت ناموفق
-        //            TempData["ErrorMessage"] =
-        //                $"پرداخت ناموفق بود. " +
-        //                $"کد خطا: {verification.Status} - {verification.Message}";
+        //            order.PaymentStatus = PaymentStatus.Failed;
+        //            order.Status = "پرداخت ناموفق";
+        //            await _context.SaveChangesAsync();
 
-        //            return RedirectToAction(nameof(OrderDetails), new { id = order.Id });
+        //            Console.WriteLine($"❌ پرداخت ناموفق. دلیل: {verification.Message}");
+
+        //            TempData["ErrorMessage"] = verification.Message;
         //        }
+
+        //        return RedirectToAction("OrderDetails", new { id });
         //    }
         //    catch (Exception ex)
         //    {
-        //        TempData["ErrorMessage"] = $"خطا در تأیید پرداخت: {ex.Message}";
-        //        return RedirectToAction(nameof(MyOrders));
+        //        Console.WriteLine($"🔥 خطای سیستمی در VerifyPayment: {ex.Message}");
+        //        TempData["ErrorMessage"] = "خطا در تأیید پرداخت.";
+        //        return RedirectToAction("MyOrders");
         //    }
         //}
 
@@ -434,8 +271,6 @@ namespace Rexplor.Controllers
         {
             try
             {
-                Console.WriteLine($"🔄 تأیید پرداخت. OrderId: {id}, Authority: {Authority}, Status: {Status}");
-
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null) return RedirectToAction("Login", "Account");
 
@@ -444,16 +279,13 @@ namespace Rexplor.Controllers
 
                 if (order == null)
                 {
-                    Console.WriteLine($"❌ سفارش #{id} برای تأیید پیدا نشد");
                     TempData["ErrorMessage"] = "سفارش مورد نظر یافت نشد.";
                     return RedirectToAction("MyOrders");
                 }
 
-                // کاربر از پرداخت انصراف داده
+                // اگر کاربر پرداخت را لغو کرده
                 if (Status != "OK")
                 {
-                    Console.WriteLine($"⏹️ کاربر پرداخت را لغو کرد. OrderId: {id}");
-
                     order.PaymentStatus = PaymentStatus.Failed;
                     order.Status = "لغو توسط کاربر";
                     await _context.SaveChangesAsync();
@@ -470,10 +302,10 @@ namespace Rexplor.Controllers
 
                 if (verification.IsSuccess)
                 {
-
+                    // حذف سبد خرید از Session
                     HttpContext.Session.Remove("ShoppingCart");
 
-                    // پرداخت موفق
+                    // آپدیت سفارش
                     order.PaymentStatus = PaymentStatus.Paid;
                     order.IsPaid = true;
                     order.PaymentDate = DateTime.Now;
@@ -482,21 +314,19 @@ namespace Rexplor.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    Console.WriteLine($"✅ پرداخت تأیید شد. RefId: {verification.RefId}");
+                    // 🆕 اگر سفارش کد تخفیف داشت و آن کد برای بازاریاب بود
+                    if (!string.IsNullOrEmpty(order.UsedDiscountCode))
+                    {
+                        await UpdateMarketerStats(order);
+                    }
 
-                    TempData["SuccessMessage"] =
-                        $"✅ پرداخت موفق!<br>" +
-                        $"<strong>کد پیگیری:</strong> {verification.RefId}<br>" +
-                        $"<strong>شماره سفارش:</strong> {order.OrderNumber}";
+                    TempData["SuccessMessage"] = $"✅ پرداخت موفق! کد پیگیری: {verification.RefId}";
                 }
                 else
                 {
-                    // پرداخت ناموفق
                     order.PaymentStatus = PaymentStatus.Failed;
                     order.Status = "پرداخت ناموفق";
                     await _context.SaveChangesAsync();
-
-                    Console.WriteLine($"❌ پرداخت ناموفق. دلیل: {verification.Message}");
 
                     TempData["ErrorMessage"] = verification.Message;
                 }
@@ -505,9 +335,91 @@ namespace Rexplor.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"🔥 خطای سیستمی در VerifyPayment: {ex.Message}");
                 TempData["ErrorMessage"] = "خطا در تأیید پرداخت.";
                 return RedirectToAction("MyOrders");
+            }
+        }
+
+        // 🆕 متد جدید: آپدیت آمار بازاریاب
+        private async Task UpdateMarketerStats(Order order)
+        {
+            try
+            {
+                // پیدا کردن کد تخفیف استفاده شده
+                var discount = await _context.Discounts
+                    .FirstOrDefaultAsync(d => d.Code == order.UsedDiscountCode);
+
+                // اگر کد تخفیف پیدا شد و برای بازاریاب بود
+                if (discount != null && discount.IsForMarketer)
+                {
+                    // افزایش تعداد فروش
+                    discount.SalesCount++;
+                    _context.Discounts.Update(discount);
+                    await _context.SaveChangesAsync();
+
+                    Console.WriteLine($"✅ فروش #{order.OrderNumber} با کد تخفیف {discount.Code} ثبت شد.");
+                    Console.WriteLine($"📊 تعداد فروش این کد: {discount.SalesCount}");
+
+                    // 🆕 ارسال ایمیل به بازاریاب (اگر ایمیل داشت)
+                    if (!string.IsNullOrEmpty(discount.MarketerEmail))
+                    {
+                        await SendEmailToMarketer(discount, order);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ خطا در آپدیت آمار بازاریاب: {ex.Message}");
+            }
+        }
+
+        // 🆕 متد جدید: ارسال ایمیل به بازاریاب
+        private async Task SendEmailToMarketer(Discount discount, Order order)
+        {
+            try
+            {
+                var emailService = HttpContext.RequestServices.GetService<EmailService>();
+
+                if (emailService != null)
+                {
+                    // موضوع ایمیل
+                    var subject = $"🎯 فروش جدید با کد تخفیف شما - #{order.OrderNumber}";
+
+                    // متن ایمیل
+                    var message = $@"
+سلام {(string.IsNullOrEmpty(discount.MarketerName) ? "بازاریاب گرامی" : discount.MarketerName)},
+
+یک فروش جدید با استفاده از کد تخفیف شما انجام شد!
+
+📋 **مشخصات فروش:**
+• شماره سفارش: #{order.OrderNumber}
+• مبلغ فروش: {order.TotalAmount:N0} تومان
+• تاریخ: {DateTime.Now:yyyy/MM/dd ساعت HH:mm}
+
+📊 **آمار کد تخفیف شما ({discount.Code}):**
+• تعداد فروش موفق: {discount.SalesCount} بار
+• درصد تخفیف: {discount.DiscountPercent}%
+
+با تشکر از همکاری شما
+
+ارادتمند،
+{User.Identity?.Name ?? "تیم فروش"}
+            ";
+
+                    // ارسال ایمیل
+                    await emailService.SendEmailAsync(discount.MarketerEmail, subject, message);
+
+                    Console.WriteLine($"📧 ایمیل اطلاع‌رسانی به {discount.MarketerEmail} ارسال شد.");
+
+                    // 🆕 (اختیاری) ایمیل کپی برای خودتان
+                    // await emailService.SendEmailAsync("admin@yoursite.com", 
+                    //     $"کپی: فروش با کد {discount.Code}", 
+                    //     $"کد تخفیف {discount.Code} یک فروش جدید ثبت کرد.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ خطا در ارسال ایمیل: {ex.Message}");
             }
         }
 

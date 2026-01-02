@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="~/ExpertApply.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ExpertApply_v1_1.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/discount.css" asp-append-version="true" />
+@*     <link rel="stylesheet" href="~/css/alerts.css" asp-append-version="true" /> *@
 </head>
 <body>
 
@@ -169,14 +170,6 @@
                                 </a>
                             </li>
 
-                            <!-- سبد خرید -->
-@*                             <li class="nav-item">
-                                <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-cart3"></i> سبد خرید
-                                    <span id="cart-count" class="badge bg-danger">*</span>
-                                </a>
-                            </li> *@
-
                             <a asp-controller="Cart" asp-action="Index" class="nav-link">
                                 <i class="bi bi-cart3"></i>
                                 سبد خرید
@@ -194,23 +187,25 @@
                                 </span>
                             </a>
 
-                            <!-- پنل ادمین -->
                             @if (User.FindFirst(ClaimTypes.Email)?.Value == "mehdimoradi.0101@gmail.com")
                             {
-                                <!-- اضافه کردن لینک به منوی ادمین -->
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Discounts" asp-action="Index">
-                                        <i class="bi bi-percent"></i> تخفیف‌ها
-                                    </a>
-                                </li>
+                                <!-- فقط یک Dropdown برای تمام مدیریت‌ها -->
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle text-warning" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-shield-check"></i> مدیریت
                                     </a>
                                     <ul class="dropdown-menu">
+                                        <!-- داشبورد مدیریت -->
                                         <li>
                                             <a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">
                                                 <i class="bi bi-speedometer"></i> داشبورد مدیریت
+                                            </a>
+                                        </li>
+
+                                        <!-- مدیریت فایل‌ها -->
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="DataFiles" asp-action="Create">
+                                                <i class="bi bi-cloud-upload"></i> آپلود فایل جدید
                                             </a>
                                         </li>
                                         <li>
@@ -218,16 +213,38 @@
                                                 <i class="bi bi-tags"></i> مدیریت دسته‌بندی‌ها
                                             </a>
                                         </li>
+
+                                        <!-- مدیریت سفارشات -->
                                         <li>
-                                            <a class="dropdown-item" asp-controller="DataFiles" asp-action="Create">
-                                                <i class="bi bi-cloud-upload"></i> آپلود فایل جدید
+                                            <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
+                                                <i class="bi bi-receipt"></i> مدیریت سفارشات
                                             </a>
                                         </li>
+
+                                        <!-- مدیریت تخفیف‌ها -->
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Discounts" asp-action="Index">
+                                                <i class="bi bi-percent"></i> مدیریت تخفیف‌ها
+                                            </a>
+                                        </li>
+
+
+                                        <!-- جداکننده -->
                                         <li><hr class="dropdown-divider"></li>
+
+                                        <!-- تنظیمات -->
                                         <li>
                                             <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
                                                 <i class="bi bi-gear"></i> تنظیمات حساب
                                             </a>
+                                        </li>
+
+                                        <!-- جداکننده -->
+                                        <li><hr class="dropdown-divider"></li>
+
+                                        <!-- عنوان سیستم -->
+                                        <li class="dropdown-header">
+                                            <small class="text-muted">نسخه: 1.0.0</small>
                                         </li>
                                     </ul>
                                 </li>
@@ -382,7 +399,7 @@
                         <h5>تماس با ما</h5>
                         <p class="contact-item">
                             <img src="icons/location1.png" alt="آدرس" width="20" height="20" class="contact-icon"">
-                            <span>آدرس: تهران، خیابان آزادی، کوچه قدیر، پلاک 7</span>
+                            <span>آدرس: تهران، خیابان آزادی، جنب دانشگاه شریف، کوچه قدیر، پلاک 7</span>
                         </p>
                         <p class="contact-item">
                             <img src="icons/phone.png" alt="تلفن" width="20" height="20" class="contact-icon">

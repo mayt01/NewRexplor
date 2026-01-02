@@ -1,0 +1,106 @@
+﻿/* استایل‌های سفارشی برای alertها */
+
+/* Alert های عمومی */
+/*.custom-alert {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 500px;
+    animation: slideInRight 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+    border-radius: 8px;
+    opacity: 0.95;
+}
+
+    .custom-alert:hover {
+        opacity: 1;
+    }*/
+
+/* انواع مختلف alert */
+/*.alert-success.custom-alert {
+    background-color: #d1e7dd;
+    border-left: 4px solid #198754;
+    color: #0f5132;
+}
+
+.alert-danger.custom-alert {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+.alert-warning.custom-alert {
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+    color: #664d03;
+}
+
+.alert-info.custom-alert {
+    background-color: #cff4fc;
+    border-left: 4px solid #0dcaf0;
+    color: #055160;
+}*/
+
+/* دکمه بستن */
+/*.custom-alert .btn-close {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/12px auto no-repeat;
+    opacity: 0.7;
+}
+
+    .custom-alert .btn-close:hover {
+        opacity: 1;
+    }*/
+
+/* انیمیشن‌ها */
+/*@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 0.95;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 0.95;
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}*/
+
+/* برای responsive */
+/*@media (max-width: 768px) {
+    .custom-alert {
+        left: 10px;
+        right: 10px;
+        max-width: calc(100% - 20px);
+        top: 70px;
+    }
+}*/
+
+/* جلوگیری از تداخل با modal */
+/*.modal-open .custom-alert {
+    z-index: 99999 !important;
+}*/
+
+/* جلوگیری از تداخل با dropdown */
+/*.dropdown-menu {
+    z-index: 9999;
+}
+
+.custom-alert {
+    z-index: 10000;
+}*/

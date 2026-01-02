@@ -49,6 +49,24 @@ namespace Rexplor.Models
         [Display(Name = "تاریخ ایجاد")]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        // -------- فیلدهای جدید برای بازاریاب --------
+        [Display(Name = "برای بازاریاب؟")]
+        public bool IsForMarketer { get; set; } = false; // 🆕 این خط را اضافه کنید
+
+        [Display(Name = "ایمیل بازاریاب")]
+        [EmailAddress(ErrorMessage = "لطفا یک ایمیل معتبر وارد کنید")]
+        public string? MarketerEmail { get; set; } // 🆕 این خط را اضافه کنید
+
+        [Display(Name = "نام بازاریاب")]
+        public string? MarketerName { get; set; } // 🆕 این خط را اضافه کنید (اختیاری)
+
+        [Display(Name = "شماره تماس بازاریاب")]
+        public string? MarketerPhone { get; set; } // 🆕 این خط را اضافه کنید
+
+        // -------- فیلدهای آمار --------
+        [Display(Name = "تعداد فروش با این کد")]
+        public int SalesCount { get; set; } = 0; // 🆕 این خط را اضافه کنید
+
         // Navigation Properties
         public virtual ICollection<FileDiscount> FileDiscounts { get; set; } = new List<FileDiscount>();
         public virtual ICollection<DiscountUsage> DiscountUsages { get; set; } = new List<DiscountUsage>();

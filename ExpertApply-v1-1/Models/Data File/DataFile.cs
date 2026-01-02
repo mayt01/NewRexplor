@@ -182,36 +182,6 @@ namespace Rexplor.Models
         public virtual ICollection<DataFile> DataFiles { get; set; }
     }
 
-    //public class DataFileViewModel
-    //{
-    //    [Required(ErrorMessage = "عنوان فایل الزامی است")]
-    //    [Display(Name = "عنوان فایل")]
-    //    public string Title { get; set; }
-
-    //    [Required(ErrorMessage = "توضیحات الزامی است")]
-    //    [Display(Name = "توضیحات")]
-    //    public string Description { get; set; }
-
-    //    [Required(ErrorMessage = "قیمت الزامی است")]
-    //    [Display(Name = "قیمت (تومان)")]
-    //    [Range(0, 1000000000, ErrorMessage = "قیمت باید بین ۰ تا ۱,۰۰۰,۰۰۰,۰۰۰ تومان باشد")]
-    //    public decimal Price { get; set; }
-
-    //    [Required(ErrorMessage = "دسته‌بندی الزامی است")]
-    //    [Display(Name = "دسته‌بندی")]
-    //    public int CategoryId { get; set; }
-
-    //    [Required(ErrorMessage = "فایل اکسل الزامی است")]
-    //    [Display(Name = "فایل اکسل")]
-    //    [DataType(DataType.Upload)]
-    //    public IFormFile UploadedFile { get; set; }
-
-    //    [Display(Name = "تگ‌ها (با کاما جدا کنید)")]
-    //    public string Tags { get; set; }
-
-    //    [Display(Name = "فعال باشد")]
-    //    public bool IsActive { get; set; } = true;
-    //}
     public class DataFileViewModel
     {
         [Required(ErrorMessage = "عنوان فایل الزامی است")]

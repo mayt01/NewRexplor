@@ -132,6 +132,31 @@ namespace Rexplor.Services
                 .FirstOrDefaultAsync(d => d.Code.ToUpper() == code.ToUpper());
         }
 
+        //public async Task<bool> UseDiscountAsync(string code, string userId, int? fileId = null, int? orderId = null)
+        //{
+        //    var discount = await GetDiscountByCodeAsync(code);
+        //    if (discount == null || !discount.IsAvailable) return false;
+
+        //    // افزایش تعداد استفاده
+        //    discount.UsedCount++;
+        //    _context.Discounts.Update(discount);
+
+        //    // ثبت استفاده
+        //    var usage = new DiscountUsage
+        //    {
+        //        UserId = userId,
+        //        DiscountId = discount.Id,
+        //        FileId = fileId,
+        //        OrderId = orderId,
+        //        UsedAt = DateTime.Now
+        //    };
+
+        //    _context.DiscountUsages.Add(usage);
+
+        //    await _context.SaveChangesAsync();
+        //    return true;
+        //}
+
         public async Task<bool> UseDiscountAsync(string code, string userId, int? fileId = null, int? orderId = null)
         {
             var discount = await GetDiscountByCodeAsync(code);

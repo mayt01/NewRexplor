@@ -73,6 +73,7 @@ namespace Rexplor.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
+
         // جداول تخفیف
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<FileDiscount> FileDiscounts { get; set; }
@@ -84,6 +85,7 @@ namespace Rexplor.Data
         public DbSet<MainPageVoice> MainPageVoices { get; set; }
         public DbSet<PI> PIs { get; set; }
         //public DbSet<Consultation> Consultations { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,4 +1,4 @@
-﻿@model Discount
+﻿@* @model Discount
 @{
     ViewData["Title"] = $"جزئیات کد تخفیف {Model.Code}";
 }
@@ -204,6 +204,270 @@
                         <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
                             <i class="bi bi-trash"></i> حذف کد تخفیف
                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+
+@model Discount
+@{
+    ViewData["Title"] = $"جزئیات کد تخفیف {Model.Code}";
+}
+
+<div class="container-fluid py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">کدهای تخفیف</a></li>
+            <li class="breadcrumb-item active">جزئیات</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i> اطلاعات کد تخفیف
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- اطلاعات اصلی -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">کد تخفیف:</label>
+                            <p class="fs-4 text-success">@Model.Code</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">درصد تخفیف:</label>
+                            <p><span class="badge bg-success fs-6">@Model.DiscountPercent%</span></p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">تاریخ شروع:</label>
+                            <p>@Model.StartDate.ToString("yyyy/MM/dd HH:mm")</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">تاریخ پایان:</label>
+                            <p>@Model.EndDate.ToString("yyyy/MM/dd HH:mm")</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">محدودیت استفاده:</label>
+                            <p>@(Model.UsageLimit?.ToString() ?? "بدون محدودیت")</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">استفاده شده:</label>
+                            <p>@Model.UsedCount @(Model.UsageLimit.HasValue ? $"/{Model.UsageLimit.Value}" : "")</p>
+                        </div>
+
+                        <!-- اطلاعات بازاریاب اگر وجود داشته باشد -->
+                        @if (Model.IsForMarketer)
+                        {
+                            <div class="col-12 mt-3">
+                                <h6 class="border-bottom pb-2 text-success">
+                                    <i class="bi bi-person-badge"></i> اطلاعات بازاریاب
+                                </h6>
+                                <div class="row mt-2">
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label fw-bold">نام بازاریاب:</label>
+                                        <p>@(string.IsNullOrEmpty(Model.MarketerName) ? "ثبت نشده" : Model.MarketerName)</p>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label fw-bold">ایمیل بازاریاب:</label>
+                                        <p>@(string.IsNullOrEmpty(Model.MarketerEmail) ? "ثبت نشده" : Model.MarketerEmail)</p>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <label class="form-label fw-bold">تعداد فروش:</label>
+                                        <p><span class="badge bg-success fs-6">@Model.SalesCount</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- بقیه اطلاعات -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">حداقل مبلغ خرید:</label>
+                            <p>@(Model.MinPurchaseAmount?.ToString("N0") ?? "ندارد") تومان</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">حداکثر تخفیف:</label>
+                            <p>@(Model.MaxDiscountAmount?.ToString("N0") ?? "ندارد") تومان</p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">وضعیت:</label>
+                            <p>
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">فعال</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">غیرفعال</span>
+                                }
+                            </p>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">دامنه اعتبار:</label>
+                            <p>
+                                @if (Model.IsForAllFiles)
+                                {
+                                    <span class="badge bg-primary">همه فایل‌ها</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">فایل‌های خاص</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> ویرایش
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">بازگشت</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فایل‌های مجاز -->
+            @if (!Model.IsForAllFiles && Model.FileDiscounts.Any())
+            {
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">فایل‌های مجاز برای این تخفیف</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>عنوان فایل</th>
+                                        <th>قیمت</th>
+                                        <th>کد</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var fileDiscount in Model.FileDiscounts)
+                                    {
+                                        <tr>
+                                            <td>@fileDiscount.File?.Title</td>
+                                            <td>@fileDiscount.File?.Price.ToString("N0") تومان</td>
+                                            <td>@fileDiscount.File?.UniqueCode</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- آمار و اطلاعات سمت چپ -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">وضعیت فعلی</h5>
+                </div>
+                <div class="card-body">
+                    @{
+                        var isExpired = Model.EndDate < DateTime.Now;
+                        var isFuture = Model.StartDate > DateTime.Now;
+                        var isActiveNow = Model.IsActive && !isExpired && !isFuture;
+                    }
+
+                    <div class="text-center mb-3">
+                        @if (isActiveNow)
+                        {
+                            <i class="bi bi-check-circle-fill text-success display-4"></i>
+                            <h4 class="mt-2 text-success">فعال و قابل استفاده</h4>
+                        }
+                        else if (isExpired)
+                        {
+                            <i class="bi bi-x-circle-fill text-danger display-4"></i>
+                            <h4 class="mt-2 text-danger">منقضی شده</h4>
+                        }
+                        else if (isFuture)
+                        {
+                            <i class="bi bi-clock-fill text-warning display-4"></i>
+                            <h4 class="mt-2 text-warning">آینده</h4>
+                        }
+                        else
+                        {
+                            <i class="bi bi-slash-circle-fill text-secondary display-4"></i>
+                            <h4 class="mt-2 text-secondary">غیرفعال</h4>
+                        }
+                    </div>
+
+                    <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>تاریخ ایجاد:</span>
+                            <span>@Model.CreatedAt.ToString("yyyy/MM/dd")</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between">
+                            <span>روزهای باقی‌مانده:</span>
+                            <span>
+                                @if (isExpired)
+                                {
+                                    <span class="text-danger">منقضی شده</span>
+                                }
+                                else
+                                {
+                                    var daysLeft = (Model.EndDate - DateTime.Now).Days;
+                                    <span class="@(daysLeft <= 7 ? "text-warning" : "text-success")">
+                                        @daysLeft روز
+                                    </span>
+                                }
+                            </span>
+                        </div>
+                        @if (Model.IsForMarketer)
+                        {
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>نوع کد:</span>
+                                <span class="badge bg-success">بازاریاب</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>تعداد فروش موفق:</span>
+                                <span class="text-success fw-bold">@Model.SalesCount</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span>نوع کد:</span>
+                                <span class="badge bg-info">عمومی</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- دکمه‌های عملیات -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> ویرایش کد تخفیف
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> حذف کد تخفیف
+                        </a>
+                        @if (Model.IsForMarketer)
+                        {
+                            <a asp-action="MarketerStats" class="btn btn-success">
+                                <i class="bi bi-graph-up"></i> مشاهده آمار بازاریاب
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

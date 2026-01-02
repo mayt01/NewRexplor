@@ -1,0 +1,267 @@
+﻿@model IEnumerable<Discount>
+@{
+    ViewData["Title"] = "آمار بازاریاب‌ها";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi bi-people text-success"></i> @ViewData["Title"]
+        </h1>
+        <div>
+            <a asp-controller="Discounts" asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> بازگشت به تخفیف‌ها
+            </a>
+        </div>
+    </div>
+
+    <!-- آمار کلی -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-badge display-4"></i>
+                    <h4 class="mt-2">@Model.Count()</h4>
+                    <p class="mb-0">تعداد بازاریاب</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-cart-check display-4"></i>
+                    <h4 class="mt-2">@Model.Sum(d => d.SalesCount)</h4>
+                    <p class="mb-0">فروش موفق</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-percent display-4"></i>
+                    <h4 class="mt-2">@Model.Sum(d => d.UsedCount)</h4>
+                    <p class="mb-0">استفاده کل</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="bi bi-activity display-4"></i>
+                    <h4 class="mt-2">@(Model.Sum(d => d.UsedCount) > 0 ? ((double)Model.Sum(d => d.SalesCount) / Model.Sum(d => d.UsedCount) * 100).ToString("F1") : "0")%</h4>
+                    <p class="mb-0">نرخ موفقیت</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-people display-1 text-muted mb-3"></i>
+                <h4 class="text-muted">هنوز بازاریابی ثبت نکرده‌اید</h4>
+                <p class="text-muted mb-4">برای افزودن بازاریاب جدید، یک کد تخفیف با گزینه "بازاریاب" ایجاد کنید.</p>
+                <a asp-controller="Discounts" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> ایجاد کد بازاریاب جدید
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-table"></i> لیست بازاریاب‌ها
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>کد تخفیف</th>
+                                <th>نام بازاریاب</th>
+                                <th>ایمیل</th>
+                                <th>درصد تخفیف</th>
+                                <th>استفاده شده</th>
+                                <th>فروش موفق</th>
+                                <th>نرخ موفقیت</th>
+                                <th>وضعیت کد</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var discount in Model.OrderByDescending(d => d.SalesCount))
+                            {
+                                var successRate = discount.UsedCount > 0
+                                ? ((double)discount.SalesCount / discount.UsedCount * 100).ToString("F1")
+                                : "0";
+                                var isActive = discount.IsActive && discount.StartDate <= DateTime.Now && discount.EndDate >= DateTime.Now;
+
+                                <tr>
+                                    <td>
+                                        <strong>@discount.Code</strong>
+                                        <br>
+                                        <small class="text-muted">@discount.DiscountPercent% تخفیف</small>
+                                    </td>
+                                    <td>
+                                        @(string.IsNullOrEmpty(discount.MarketerName) ? "بدون نام" : discount.MarketerName)
+                                        @if (!string.IsNullOrEmpty(discount.MarketerPhone))
+                                        {
+                                            <br>
+                                            <small class="text-muted">@discount.MarketerPhone</small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(discount.MarketerEmail))
+                                        {
+                                            <a href="mailto:@discount.MarketerEmail">@discount.MarketerEmail</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">ندارد</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@discount.DiscountPercent%</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(discount.UsedCount > 0 ? "bg-info" : "bg-secondary")">
+                                            @discount.UsedCount
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge @(discount.SalesCount > 0 ? "bg-success" : "bg-secondary")">
+                                            @discount.SalesCount
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar @(Convert.ToDouble(successRate) >= 50 ? "bg-success" : "bg-warning")"
+                                                 role="progressbar"
+                                                 style="width: @(Math.Min(Convert.ToDouble(successRate), 100))%">
+                                                @successRate%
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">@discount.SalesCount از @discount.UsedCount</small>
+                                    </td>
+                                    <td>
+                                        @if (isActive)
+                                        {
+                                            <span class="badge bg-success">فعال</span>
+                                            <br>
+                                            <small>تا @discount.EndDate.ToString("yyyy/MM/dd")</small>
+                                        }
+                                        else if (discount.EndDate < DateTime.Now)
+                                        {
+                                            <span class="badge bg-secondary">منقضی</span>
+                                        }
+                                        else if (!discount.IsActive)
+                                        {
+                                            <span class="badge bg-danger">غیرفعال</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-controller="Discounts" asp-action="Details" asp-route-id="@discount.Id"
+                                               class="btn btn-info" title="مشاهده">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-controller="Discounts" asp-action="Edit" asp-route-id="@discount.Id"
+                                               class="btn btn-warning" title="ویرایش">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-primary send-email-btn"
+                                                    title="ارسال ایمیل"
+                                                    data-email="@discount.MarketerEmail"
+                                                    data-name="@discount.MarketerName">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- نمودار ساده (در صورت تمایل) -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">بازاریاب‌های برتر بر اساس فروش</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach (var discount in Model.Where(d => d.SalesCount > 0).OrderByDescending(d => d.SalesCount).Take(5))
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@(string.IsNullOrEmpty(discount.MarketerName) ? discount.Code : discount.MarketerName)</strong>
+                                        <br>
+                                        <small class="text-muted">@discount.Code</small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">@discount.SalesCount فروش</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">بازاریاب‌های فعال</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach (var discount in Model.Where(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now).Take(5))
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@(string.IsNullOrEmpty(discount.MarketerName) ? discount.Code : discount.MarketerName)</strong>
+                                        <br>
+                                        <small class="text-muted">@discount.Code - @discount.DiscountPercent%</small>
+                                    </div>
+                                    <span class="badge @(discount.SalesCount > 0 ? "bg-success" : "bg-secondary") rounded-pill">
+                                        @discount.SalesCount فروش
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // دکمه ارسال ایمیل
+            $('.send-email-btn').click(function() {
+                const email = $(this).data('email');
+                const name = $(this).data('name');
+
+                if (!email) {
+                    alert('ایمیلی برای این بازاریاب ثبت نشده است.');
+                    return;
+                }
+
+                const subject = encodeURIComponent('گزارش عملکرد - ' + name);
+                const body = encodeURIComponent(`سلام ${name},\n\nگزارش عملکرد شما:\n\nبا تشکر`);
+                window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            });
+        });
+    </script>
+}

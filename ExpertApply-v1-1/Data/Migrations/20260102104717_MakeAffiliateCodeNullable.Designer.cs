@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rexplor.Data;
 
@@ -11,9 +12,11 @@ using Rexplor.Data;
 namespace Rexplor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260102104717_MakeAffiliateCodeNullable")]
+    partial class MakeAffiliateCodeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,6 +160,123 @@ namespace Rexplor.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Rexplor.Models.Affiliate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AffiliateCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("CommissionPaid")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastReferralDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SuccessfulReferrals")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalReferralAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("Affiliates");
+                });
+
+            modelBuilder.Entity("Rexplor.Models.AffiliateReferral", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AffiliateId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Commission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CommissionPaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("CommissionPercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DiscountCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("EmailSentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCommissionPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEmailSent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("OrderAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AffiliateId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("AffiliateReferrals");
                 });
 
             modelBuilder.Entity("Rexplor.Models.ApplicationUser", b =>
@@ -386,6 +506,16 @@ namespace Rexplor.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal?>("AffiliateCommissionPercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("AffiliateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AffiliateRestrictions")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -405,29 +535,17 @@ namespace Rexplor.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAffiliateDiscount")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsForAllFiles")
                         .HasColumnType("bit");
-
-                    b.Property<bool>("IsForMarketer")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MarketerEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MarketerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MarketerPhone")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("MaxDiscountAmount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("MinPurchaseAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("SalesCount")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -439,6 +557,8 @@ namespace Rexplor.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AffiliateId");
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -561,6 +681,23 @@ namespace Rexplor.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AffiliateCode")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal?>("AffiliateCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("AffiliateId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CommissionPaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CommissionType")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -569,6 +706,9 @@ namespace Rexplor.Data.Migrations
 
                     b.Property<string>("FileName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCommissionPaid")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
@@ -614,6 +754,8 @@ namespace Rexplor.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AffiliateId");
 
                     b.HasIndex("UserId");
 
@@ -743,6 +885,34 @@ namespace Rexplor.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Rexplor.Models.Affiliate", b =>
+                {
+                    b.HasOne("Rexplor.Models.Discount", "Discount")
+                        .WithMany()
+                        .HasForeignKey("DiscountId");
+
+                    b.Navigation("Discount");
+                });
+
+            modelBuilder.Entity("Rexplor.Models.AffiliateReferral", b =>
+                {
+                    b.HasOne("Rexplor.Models.Affiliate", "Affiliate")
+                        .WithMany("Referrals")
+                        .HasForeignKey("AffiliateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rexplor.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Affiliate");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("Rexplor.Models.DataFile", b =>
                 {
                     b.HasOne("Rexplor.Models.ApplicationUser", null)
@@ -756,6 +926,15 @@ namespace Rexplor.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Rexplor.Models.Discount", b =>
+                {
+                    b.HasOne("Rexplor.Models.Affiliate", "Affiliate")
+                        .WithMany()
+                        .HasForeignKey("AffiliateId");
+
+                    b.Navigation("Affiliate");
                 });
 
             modelBuilder.Entity("Rexplor.Models.DiscountUsage", b =>
@@ -812,11 +991,17 @@ namespace Rexplor.Data.Migrations
 
             modelBuilder.Entity("Rexplor.Models.Order", b =>
                 {
+                    b.HasOne("Rexplor.Models.Affiliate", "Affiliate")
+                        .WithMany()
+                        .HasForeignKey("AffiliateId");
+
                     b.HasOne("Rexplor.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Affiliate");
 
                     b.Navigation("User");
                 });
@@ -838,6 +1023,11 @@ namespace Rexplor.Data.Migrations
                     b.Navigation("DataFile");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Rexplor.Models.Affiliate", b =>
+                {
+                    b.Navigation("Referrals");
                 });
 
             modelBuilder.Entity("Rexplor.Models.ApplicationUser", b =>

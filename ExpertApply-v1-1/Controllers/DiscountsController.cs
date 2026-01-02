@@ -151,6 +151,19 @@ namespace Rexplor.Controllers.Admin
             return View(discount);
         }
 
+        public async Task<IActionResult> MarketerStats()
+        {
+            // فقط کدهای تخفیفی که برای بازاریاب هستند
+            var marketerDiscounts = await _context.Discounts
+                .Where(d => d.IsForMarketer)
+                .Include(d => d.FileDiscounts)
+                .ThenInclude(fd => fd.File)
+                .OrderByDescending(d => d.SalesCount)
+                .ToListAsync();
+
+            return View(marketerDiscounts);
+        }
+
         // POST: Admin/Discounts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]

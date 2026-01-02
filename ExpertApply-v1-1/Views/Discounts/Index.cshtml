@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Discount>
+﻿@* @model IEnumerable<Discount>
 @{
     ViewData["Title"] = "مدیریت کدهای تخفیف";
 }
@@ -124,4 +124,275 @@
             </div>
         </div>
     }
+</div> *@
+
+
+@model IEnumerable<Discount>
+@{
+    ViewData["Title"] = "مدیریت کدهای تخفیف";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+            <i class="bi bi-percent text-success"></i> @ViewData["Title"]
+        </h1>
+        <div>
+            <a asp-action="Create" class="btn btn-primary me-2">
+                <i class="bi bi-plus-circle"></i> کد تخفیف جدید
+            </a>
+            <a asp-action="Stats" class="btn btn-info me-2">
+                <i class="bi bi-graph-up"></i> آمار استفاده
+            </a>
+            <a asp-action="MarketerStats" class="btn btn-success">
+                <i class="bi bi-people"></i> آمار بازاریاب‌ها
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- فیلترها -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <select class="form-select" id="filterType">
+                        <option value="all">همه انواع</option>
+                        <option value="marketer">بازاریاب</option>
+                        <option value="general">عمومی</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterStatus">
+                        <option value="all">همه وضعیت‌ها</option>
+                        <option value="active">فعال</option>
+                        <option value="expired">منقضی</option>
+                        <option value="future">آینده</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" placeholder="جستجو کد تخفیف یا نام بازاریاب...">
+                        <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-percent display-1 text-muted mb-3"></i>
+                <h4 class="text-muted">هنوز کد تخفیفی ایجاد نکرده‌اید</h4>
+                <p class="text-muted mb-4">برای ایجاد اولین کد تخفیف روی دکمه زیر کلیک کنید.</p>
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> ایجاد کد تخفیف
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="discountsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>کد تخفیف</th>
+                                <th>درصد</th>
+                                <th>بازاریاب</th>
+                                <th>تاریخ شروع</th>
+                                <th>تاریخ پایان</th>
+                                <th>استفاده شده</th>
+                                <th>فروش موفق</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var discount in Model)
+                            {
+                                <tr data-type="@(discount.IsForMarketer ? "marketer" : "general")"
+                                    data-status="@(discount.EndDate < DateTime.Now ? "expired" : discount.StartDate > DateTime.Now ? "future" : "active")">
+                                    <td>
+                                        <strong>@discount.Code</strong>
+                                        @if (!discount.IsForAllFiles)
+                                        {
+                                            <span class="badge bg-info ms-1">محدود</span>
+                                        }
+                                        @if (discount.IsForMarketer)
+                                        {
+                                            <span class="badge bg-success ms-1">بازاریاب</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">@discount.DiscountPercent%</span>
+                                    </td>
+                                    <td>
+                                        @if (discount.IsForMarketer)
+                                        {
+                                            <small>@(string.IsNullOrEmpty(discount.MarketerName) ? "بدون نام" : discount.MarketerName)</small>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>@discount.StartDate.ToString("yyyy/MM/dd")</td>
+                                    <td>@discount.EndDate.ToString("yyyy/MM/dd")</td>
+                                    <td>
+                                        @discount.UsedCount
+                                        @if (discount.UsageLimit.HasValue)
+                                        {
+                                            <span class="text-muted">/ @discount.UsageLimit.Value</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (discount.IsForMarketer)
+                                        {
+                                            <span class="badge @(discount.SalesCount > 0 ? "bg-success" : "bg-secondary")">
+                                                @discount.SalesCount
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (discount.IsActive)
+                                        {
+                                            @if (discount.StartDate > DateTime.Now)
+                                            {
+                                                <span class="badge bg-warning">آینده</span>
+                                            }
+                                            else if (discount.EndDate < DateTime.Now)
+                                            {
+                                                <span class="badge bg-secondary">منقضی</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">فعال</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">غیرفعال</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a asp-action="Details" asp-route-id="@discount.Id"
+                                               class="btn btn-info" title="جزئیات">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@discount.Id"
+                                               class="btn btn-warning" title="ویرایش">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@discount.Id"
+                                               class="btn btn-danger" title="حذف">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- آمار کلی -->
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">کل کدها</h6>
+                        <h3>@Model.Count()</h3>
+                        <small>@Model.Count(d => d.IsForMarketer) کد بازاریاب</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">کدهای فعال</h6>
+                        <h3>@Model.Count(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">کل استفاده</h6>
+                        <h3>@Model.Sum(d => d.UsedCount)</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h6 class="card-title">فروش بازاریاب‌ها</h6>
+                        <h3>@Model.Where(d => d.IsForMarketer).Sum(d => d.SalesCount)</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // فیلتر کردن جدول
+            function filterTable() {
+                const typeFilter = $('#filterType').val();
+                const statusFilter = $('#filterStatus').val();
+                const searchText = $('#searchInput').val().toLowerCase();
+
+                $('#discountsTable tbody tr').each(function() {
+                    const row = $(this);
+                    const type = row.data('type');
+                    const status = row.data('status');
+                    const rowText = row.text().toLowerCase();
+
+                    const typeMatch = typeFilter === 'all' || type === typeFilter;
+                    const statusMatch = statusFilter === 'all' || status === statusFilter;
+                    const searchMatch = searchText === '' || rowText.includes(searchText);
+
+                    if (typeMatch && statusMatch && searchMatch) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            }
+
+            // اعمال فیلترها
+            $('#filterType, #filterStatus, #searchInput').on('change keyup', filterTable);
+
+            // پاک کردن جستجو
+            $('#clearSearch').click(function() {
+                $('#searchInput').val('');
+                filterTable();
+            });
+
+            // مقداردهی اولیه فیلترها
+            filterTable();
+        });
+    </script>
+}
